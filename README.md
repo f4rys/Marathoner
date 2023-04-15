@@ -25,9 +25,6 @@
 ## Controls
 <div>Space for jumping and starting new game.</div>
 
-<br/>
-
-
 ## Credits
 
 <div>• Background sky graphics by <a href="https://www.freepik.com/free-vector/wanderlust-travel-landscapes_5667591.htm#query=pixel%20sky%20background&position=11&from_view=keyword&track=ais">gstudioimagen</a> on Freepik</div>
