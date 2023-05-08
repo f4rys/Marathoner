@@ -10,7 +10,7 @@
 
 # 
 
-<div>Simple 2D game built with Pygame. Character runs throught the world and has to avoid obstacles by jumping over them.</div>
+<div>Simple 2D game built with Pygame. Character runs throught the world and has to avoid obstacles by jumping over them. Best score is stored locally in encrypted file.</div>
 
 <br/>
 
@@ -24,6 +24,7 @@
 
 ## Controls
 <div>Space for jumping and starting new game.</div>
+
 
 ## Credits
 
