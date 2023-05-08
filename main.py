@@ -1,6 +1,7 @@
 import pygame
 import sys
 from random import randint, choice
+from cryptography.fernet import Fernet
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -66,6 +67,39 @@ class Obstacle(pygame.sprite.Sprite):
         if self.rect.x <= -100:
             self.kill()
 
+def generate_encryption_key():
+    key = Fernet.generate_key()
+    with open('key.key', 'wb') as file:
+        file.write(key)
+
+def load_encryption_key():
+    with open('key.key', 'rb') as file:
+        key = file.read()
+    return key
+
+def load_best_score():
+    try:
+        key = load_encryption_key()
+        with open('best_score.txt', 'rb') as file:
+            encrypted_data = file.read()
+
+        fernet = Fernet(key)
+        decrypted_data = fernet.decrypt(encrypted_data)
+        best_score = int(decrypted_data.decode())
+    except (FileNotFoundError, ValueError):
+        best_score = 0
+    return best_score
+
+def save_best_score(score):
+    best_score = load_best_score()
+    if score > best_score:
+        key = load_encryption_key()
+        fernet = Fernet(key)
+        encrypted_data = fernet.encrypt(str(score).encode())
+
+        with open('best_score.txt', 'wb') as file:
+            file.write(encrypted_data)
+
 def display_score():
     current_time = int(pygame.time.get_ticks()/1000) - start_time
     score_surface = game_font.render(str(current_time) + " s", False, 'White')
@@ -77,6 +111,7 @@ def collision_sprite():
     if pygame.sprite.spritecollide(player.sprite, obstacle_group, False):
         obstacle_group.empty()
         game_over_sound.play()
+        save_best_score(score)
         return False
     else:
         return True
@@ -140,15 +175,20 @@ while True:
         game_active = collision_sprite()
 
     else:
+        best_score = load_best_score()
         screen.blit(sky_surface, (0,0))
         
         score_message = game_font.render(f"Your score: {score}", False, "White")
+        best_score_message = game_font.render(f"Best score: {best_score}", False, "White")
         score_message_rectangle = score_message.get_rect(center=(640, 600))
+        best_score_message_rectangle = best_score_message.get_rect(center=(640, 660))
 
         if score == 0:
             screen.blit(game_message, game_message_rectangle)
+            screen.blit(best_score_message, best_score_message_rectangle)
         else:
             screen.blit(score_message, score_message_rectangle)
+            screen.blit(best_score_message, best_score_message_rectangle)
 
     pygame.display.update()
     clock.tick(60)
