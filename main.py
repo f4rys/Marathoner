@@ -1,120 +1,9 @@
 import pygame
 import sys
-from random import randint, choice
-from cryptography.fernet import Fernet
-
-class Player(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-        player_run1 = pygame.image.load('graphics/player1.png').convert_alpha()
-        player_run2 = pygame.image.load('graphics/player2.png').convert_alpha()
-        self.player_run = [player_run1, player_run2]
-        self.player_index = 0
-        self.player_jump = pygame.image.load('graphics/player2.png').convert_alpha()
-
-        self.image = self.player_run[self.player_index]
-        self.rect = self.image.get_rect(midbottom = (180, 520))
-        self.gravity = 0
-
-        self.jump_sound = pygame.mixer.Sound('audios/jump.mp3')
-        self.jump_sound.set_volume(0.5)
-
-    def player_input(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_SPACE] and self.rect.bottom >= 520:
-            self.gravity = -25
-            self.jump_sound.play()
-            
-    def apply_gravity(self):
-        self.gravity += 1
-        self.rect.y += self.gravity
-        if self.rect.bottom >= 520:
-            self.rect.bottom = 520
-
-    def animation_state(self):
-        if self.rect.bottom < 520:
-            self.image = self.player_jump
-        else:
-            self.player_index += 0.1
-            if self.player_index >= len(self.player_run):
-                self.player_index = 0
-            self.image = self.player_run[int(self.player_index)]
-        
-    def update(self):
-        self.player_input()
-        self.apply_gravity()
-        self.animation_state()
-
-class Obstacle(pygame.sprite.Sprite):
-    def __init__(self, type):
-        super().__init__()
-
-        if type == 'stone1':
-            image = pygame.image.load('graphics/stone1.png').convert_alpha()
-            y_pos = 520
-        else:
-            image = pygame.image.load('graphics/stone2.png').convert_alpha()
-            y_pos = 350
-
-        self.image = image
-        self.rect = self.image.get_rect(midbottom = (randint(1300,1600), y_pos))
-
-    def update(self):
-        self.rect.x -= 6
-        self.destroy()
-
-    def destroy(self):
-        if self.rect.x <= -100:
-            self.kill()
-
-def generate_encryption_key():
-    key = Fernet.generate_key()
-    with open('key.key', 'wb') as file:
-        file.write(key)
-
-def load_encryption_key():
-    with open('key.key', 'rb') as file:
-        key = file.read()
-    return key
-
-def load_best_score():
-    try:
-        key = load_encryption_key()
-        with open('best_score.txt', 'rb') as file:
-            encrypted_data = file.read()
-
-        fernet = Fernet(key)
-        decrypted_data = fernet.decrypt(encrypted_data)
-        best_score = int(decrypted_data.decode())
-    except (FileNotFoundError, ValueError):
-        best_score = 0
-    return best_score
-
-def save_best_score(score):
-    best_score = load_best_score()
-    if score > best_score:
-        key = load_encryption_key()
-        fernet = Fernet(key)
-        encrypted_data = fernet.encrypt(str(score).encode())
-
-        with open('best_score.txt', 'wb') as file:
-            file.write(encrypted_data)
-
-def display_score():
-    current_time = int(pygame.time.get_ticks()/1000) - start_time
-    score_surface = game_font.render(str(current_time) + " s", False, 'White')
-    score_rectangle = score_surface.get_rect(center=(640, 50))
-    screen.blit(score_surface, score_rectangle)
-    return current_time
-
-def collision_sprite():
-    if pygame.sprite.spritecollide(player.sprite, obstacle_group, False):
-        obstacle_group.empty()
-        game_over_sound.play()
-        save_best_score(score)
-        return False
-    else:
-        return True
+from random import choice
+from Obstacle import Obstacle
+from Player import Player
+from Mechanics import Mechanics
 
 pygame.init()
 screen = pygame.display.set_mode((1280,720))
@@ -145,6 +34,8 @@ theme_sound.play(loops = -1)
 obstacle_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(obstacle_timer, 1500)
 
+mechanics = Mechanics()
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -170,12 +61,12 @@ while True:
         obstacle_group.draw(screen)
         obstacle_group.update()
 
-        score = display_score()
+        score = mechanics.display_score(game_font, start_time, screen)
 
-        game_active = collision_sprite()
+        game_active = mechanics.collision_sprite(player, obstacle_group, game_over_sound, score)
 
     else:
-        best_score = load_best_score()
+        best_score = mechanics.load_best_score()
         screen.blit(sky_surface, (0,0))
         
         score_message = game_font.render(f"Your score: {score}", False, "White")
