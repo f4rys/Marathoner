@@ -130,3 +130,6 @@ dmypy.json
 
 # vscode
 .vscode
+
+# Game score
+best_score.txt
