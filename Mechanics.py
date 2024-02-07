@@ -2,8 +2,10 @@ from cryptography.fernet import Fernet
 import pygame
 
 class Mechanics():
-    def __init__(self):
-        pass
+    def __init__(self, screen_size):
+        self.screen_size = screen_size
+        self.score_rectangle = None
+        self.score_surface = None
 
     def load_encryption_key(self):
         with open('key.key', 'rb') as file:
@@ -35,9 +37,9 @@ class Mechanics():
 
     def display_score(self, game_font, start_time, screen):
         current_time = int(pygame.time.get_ticks()/1000) - start_time
-        score_surface = game_font.render(str(current_time) + " s", False, 'White')
-        score_rectangle = score_surface.get_rect(center=(640, 50))
-        screen.blit(score_surface, score_rectangle)
+        self.score_surface = game_font.render(str(current_time) + " s", False, 'White')
+        self.score_rectangle = self.score_surface.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 14))
+        screen.blit(self.score_surface, self.score_rectangle)
         return current_time
 
     def collision_sprite(self, player, obstacle_group, game_over_sound, score):
@@ -48,3 +50,8 @@ class Mechanics():
             return False
         else:
             return True
+        
+    def update_screen_size(self, screen_size):
+        self.screen_size = screen_size
+        if(self.score_rectangle and self.score_surface):
+            self.score_rectangle = self.score_surface.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 14))
