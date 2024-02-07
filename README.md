@@ -34,4 +34,4 @@
 <div>• Player and stones graphics were created by <a href="https://www.bing.com/create">Bing Image Creator</a></div>
 <div>• Jump sound effect taken from <a href="https://www.youtube.com/watch?v=QmCfnTtM7vU">here</a></div>
 <div>• Game over sound effect taken from <a href="https://www.youtube.com/watch?v=bug1b0fQS8Y">here</a></div>
-<div>• I am the author of theme song. Its extended, but not yet completed version is available <a href="https://on.soundcloud.com/CwVSN">here</a></div>
+<div>• I am the author of theme song. Its full version is available <a href="https://on.soundcloud.com/C6pCU">here</a></div>
