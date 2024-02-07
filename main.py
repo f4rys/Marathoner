@@ -26,8 +26,8 @@ ground_surface = pygame.image.load('graphics/ground.jpg').convert()
 game_message = game_font.render("Start the game by pressing 'space'", False, "White")
 game_message_rectangle = game_message.get_rect(center=(640, 600))
 
-game_over_sound = pygame.mixer.Sound('audios/game_over.mp3')
-theme_sound = pygame.mixer.Sound('audios/theme.mp3')
+game_over_sound = pygame.mixer.Sound('audios/game_over.ogg')
+theme_sound = pygame.mixer.Sound('audios/theme.ogg')
 theme_sound.set_volume(0.5)
 theme_sound.play(loops = -1)
 

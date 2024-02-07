@@ -13,7 +13,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(midbottom = (180, 520))
         self.gravity = 0
 
-        self.jump_sound = pygame.mixer.Sound('audios/jump.mp3')
+        self.jump_sound = pygame.mixer.Sound('audios/jump.ogg')
         self.jump_sound.set_volume(0.5)
 
     def player_input(self):
