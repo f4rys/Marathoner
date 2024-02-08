@@ -16,6 +16,8 @@ game_font = pygame.font.Font('fonts/pixeled.ttf', (screen_size[0]+screen_size[1]
 game_active = False
 start_time = 0
 score = 0
+current_screen = 0
+pause_time = 0
 
 player = pygame.sprite.GroupSingle()
 player.add(Player(screen_size))
@@ -43,16 +45,26 @@ while True:
             pygame.quit()
             sys.exit()
 
-        if event.type == pygame.KEYDOWN and game_active == False:
-            if event.key == pygame.K_SPACE:
-                game_active = True
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE and current_screen == 0:
+                current_screen = 1
                 start_time = int(pygame.time.get_ticks() / 1000)
+            if event.key == pygame.K_ESCAPE and current_screen != 2:
+                pause_time = pygame.time.get_ticks()
+                current_screen = 2
+            elif event.key == pygame.K_ESCAPE and current_screen == 2:
+                current_screen = 1
+                pause_time = pygame.time.get_ticks() - pause_time
+                start_time += int(pause_time / 1000)
+                pause_time = 0
 
-        if event.type == obstacle_timer and game_active and pygame.time.get_ticks() - resize_time > 1000:
+        if event.type == obstacle_timer and current_screen == 1 and pygame.time.get_ticks() - resize_time > 1000:
             resize_time = 0
             obstacle_group.add(Obstacle(choice(['stone1', 'stone1', 'stone2']), screen_size))
 
         if event.type == pygame.VIDEORESIZE:
+            current_screen = 2
+            pause_time = pygame.time.get_ticks()
             resize_time = pygame.time.get_ticks()
 
             new_aspect_ratio = event.w / event.h
@@ -72,21 +84,7 @@ while True:
             for obstacle in obstacle_group:
                 obstacle.update_screen_size(screen_size)
 
-    if game_active:
-        screen.blit(pygame.transform.scale(sky_surface, screen_size), (0, 0))
-        screen.blit(pygame.transform.scale(ground_surface, screen_size), (0, screen_size[1] * 0.6))
-        
-        player.draw(screen)
-        player.update()
-
-        obstacle_group.draw(screen)
-        obstacle_group.update()
-
-        score = mechanics.display_score(game_font, start_time, screen)
-
-        game_active = mechanics.collision_sprite(player, obstacle_group, game_over_sound, score)
-
-    else:
+    if current_screen == 0:
         best_score = mechanics.load_best_score()
         screen.blit(pygame.transform.scale(sky_surface, screen_size), (0, 0))
 
@@ -104,6 +102,26 @@ while True:
         else:
             screen.blit(score_message, score_message_rectangle)
             screen.blit(best_score_message, best_score_message_rectangle)
+    
+    elif current_screen == 1:
+        screen.blit(pygame.transform.scale(sky_surface, screen_size), (0, 0))
+        screen.blit(pygame.transform.scale(ground_surface, screen_size), (0, screen_size[1] * 0.6))
+        
+        player.draw(screen)
+        player.update()
+
+        obstacle_group.draw(screen)
+        obstacle_group.update()
+
+        score = mechanics.display_score(game_font, start_time, screen)
+
+        current_screen = mechanics.collision_sprite(player, obstacle_group, game_over_sound, score)
+
+    elif current_screen == 2:
+        screen.fill((0, 0, 0))
+        marathoner_text = game_font.render("Marathoner", False, "White")
+        marathoner_text_rect = marathoner_text.get_rect(center=(screen_size[0] // 2, screen_size[1] // 2))
+        screen.blit(marathoner_text, marathoner_text_rect)     
 
     pygame.display.update()
     clock.tick(60)

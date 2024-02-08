@@ -47,9 +47,9 @@ class Mechanics():
             obstacle_group.empty()
             game_over_sound.play()
             self.save_best_score(score)
-            return False
+            return 0
         else:
-            return True
+            return 1
         
     def update_screen_size(self, screen_size):
         self.screen_size = screen_size
