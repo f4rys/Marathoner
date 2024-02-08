@@ -23,7 +23,7 @@ player.add(Player(screen_size))
 obstacle_group = pygame.sprite.Group()
 
 sky_surface = pygame.image.load('images/sky.jpg').convert()
-ground_surface = pygame.image.load('images/ground.jpg').convert()
+ground_surface = pygame.image.load('images/ground.png').convert_alpha()
 
 game_over_sound = pygame.mixer.Sound('audio/game_over.ogg')
 theme_sound = pygame.mixer.Sound('audio/theme.ogg')
@@ -74,8 +74,8 @@ while True:
 
     if game_active:
         screen.blit(pygame.transform.scale(sky_surface, screen_size), (0, 0))
-        screen.blit(pygame.transform.scale(ground_surface, screen_size), (0, screen_size[1] * 0.72))
-
+        screen.blit(pygame.transform.scale(ground_surface, screen_size), (0, screen_size[1] * 0.6))
+        
         player.draw(screen)
         player.update()
 
