@@ -21,11 +21,11 @@ player.add(Player(original_screen_size))
 
 obstacle_group = pygame.sprite.Group()
 
-sky_surface = pygame.image.load('graphics/sky.jpg').convert()
-ground_surface = pygame.image.load('graphics/ground.jpg').convert()
+sky_surface = pygame.image.load('images/sky.jpg').convert()
+ground_surface = pygame.image.load('images/ground.jpg').convert()
 
-game_over_sound = pygame.mixer.Sound('audios/game_over.ogg')
-theme_sound = pygame.mixer.Sound('audios/theme.ogg')
+game_over_sound = pygame.mixer.Sound('audio/game_over.ogg')
+theme_sound = pygame.mixer.Sound('audio/theme.ogg')
 theme_sound.set_volume(0.5)
 theme_sound.play(loops=-1)
 

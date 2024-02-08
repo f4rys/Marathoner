@@ -8,10 +8,10 @@ class Player(pygame.sprite.Sprite):
         self.player_index = 0
         
     def load(self):
-        player_run1 = pygame.image.load('graphics/player1.png').convert_alpha()
-        player_run2 = pygame.image.load('graphics/player2.png').convert_alpha()
+        player_run1 = pygame.image.load('images/player1.png').convert_alpha()
+        player_run2 = pygame.image.load('images/player2.png').convert_alpha()
         self.player_run = [player_run1, player_run2]
-        self.player_jump = pygame.image.load('graphics/player2.png').convert_alpha()
+        self.player_jump = pygame.image.load('images/player2.png').convert_alpha()
 
         self.multiplier = self.screen_size[1] * 0.0015
 
@@ -26,7 +26,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(midbottom=(initial_x, initial_y))
         self.gravity = 0
 
-        self.jump_sound = pygame.mixer.Sound('audios/jump.ogg')
+        self.jump_sound = pygame.mixer.Sound('audio/jump.ogg')
         self.jump_sound.set_volume(0.5)
 
     def player_input(self):
