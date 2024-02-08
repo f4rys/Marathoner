@@ -43,7 +43,7 @@ class Mechanics():
         return current_time
 
     def collision_sprite(self, player, obstacle_group, game_over_sound, score):
-        if pygame.sprite.spritecollide(player.sprite, obstacle_group, False):
+        if pygame.sprite.spritecollideany(player.sprite, obstacle_group, pygame.sprite.collide_mask):
             obstacle_group.empty()
             game_over_sound.play()
             self.save_best_score(score)

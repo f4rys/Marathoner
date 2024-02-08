@@ -22,6 +22,8 @@ class Obstacle(pygame.sprite.Sprite):
         image = pygame.transform.scale(image, (image.get_width() * multiplier, image.get_height() * multiplier))
 
         self.image = image
+        self.mask = pygame.mask.from_surface(self.image)
+        
         self.rect = self.image.get_rect(midbottom=(randint(self.screen_size[0], self.screen_size[0] + self.screen_size[0] // 4), y_pos))
 
     def update(self):

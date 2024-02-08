@@ -8,7 +8,6 @@ class Player(pygame.sprite.Sprite):
         self.jump_index = 0
         self.load()
         
-        
     def load(self):
         player_run1 = pygame.image.load('images/run1.png').convert_alpha()
         player_run2 = pygame.image.load('images/run2.png').convert_alpha()
@@ -28,6 +27,7 @@ class Player(pygame.sprite.Sprite):
         initial_y = self.screen_size[1] - self.screen_size[1] // 2
 
         self.image = self.player_run[0]
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(midbottom=(initial_x, initial_y))
         self.gravity = 0
 
