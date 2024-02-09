@@ -26,11 +26,15 @@ obstacle_group = pygame.sprite.Group()
 
 sky_surface = pygame.image.load('images/sky.jpg').convert()
 ground_surface = pygame.image.load('images/ground.png').convert_alpha()
+vignette_surface = pygame.image.load('images/vignette.png').convert_alpha()
+pause_surface = pygame.image.load('images/pause.png').convert_alpha()
 
 game_over_sound = pygame.mixer.Sound('audio/game_over.ogg')
 theme_sound = pygame.mixer.Sound('audio/theme.ogg')
 theme_sound.set_volume(0.5)
 theme_sound.play(loops=-1)
+
+pause_screen_drawn = False
 
 obstacle_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(obstacle_timer, 1500)
@@ -40,6 +44,9 @@ mechanics = Mechanics(screen_size)
 resize_time = 0
 
 while True:
+
+    mouse = pygame.mouse.get_pos() 
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -54,10 +61,26 @@ while True:
                 current_screen = 2
             elif event.key == pygame.K_ESCAPE and current_screen == 2:
                 current_screen = 1
+                pause_screen_drawn = False
                 pause_time = pygame.time.get_ticks() - pause_time
                 start_time += int(pause_time / 1000)
                 pause_time = 0
 
+        if event.type == pygame.MOUSEBUTTONDOWN and current_screen == 1: 
+            if screen_size[0] * 0.867 <= mouse[0] <= (screen_size[0] * 0.867) + screen_size[0] * 0.1 and screen_size[1] // 60 <= mouse[1] <= (screen_size[1] // 60) + screen_size[1] * 0.1:
+                pause_time = pygame.time.get_ticks()
+                current_screen = 2
+
+        elif event.type == pygame.MOUSEBUTTONDOWN and current_screen == 2: 
+            if screen_size[0] // 2 <= mouse[0] <= (screen_size[0] // 2) + 140 and screen_size[1] // 4 <= mouse[1] <= (screen_size[1] // 4) + 40:
+                pygame.display.toggle_fullscreen()
+            if screen_size[0] * 0.867 <= mouse[0] <= (screen_size[0] * 0.867) + screen_size[0] * 0.1 and screen_size[1] // 60 <= mouse[1] <= (screen_size[1] // 60) + screen_size[1] * 0.1:
+                current_screen = 1
+                pause_screen_drawn = False
+                pause_time = pygame.time.get_ticks() - pause_time
+                start_time += int(pause_time / 1000)
+                pause_time = 0
+        
         if event.type == obstacle_timer and current_screen == 1 and pygame.time.get_ticks() - resize_time > 1000:
             resize_time = 0
             obstacle_group.add(Obstacle(choice(['stone1', 'stone1', 'stone2']), screen_size))
@@ -87,6 +110,7 @@ while True:
     if current_screen == 0:
         best_score = mechanics.load_best_score()
         screen.blit(pygame.transform.scale(sky_surface, screen_size), (0, 0))
+        screen.blit(pygame.transform.scale(vignette_surface, screen_size), (0, 0))
 
         game_message = game_font.render("Start the game by pressing 'space'", False, "White")
         game_message_rectangle = game_message.get_rect(center=(screen_size[0] // 2, screen_size[1] // 1.25))
@@ -106,22 +130,43 @@ while True:
     elif current_screen == 1:
         screen.blit(pygame.transform.scale(sky_surface, screen_size), (0, 0))
         screen.blit(pygame.transform.scale(ground_surface, screen_size), (0, screen_size[1] * 0.6))
-        
+
+        esc_message = game_font.render("[ESC]", False, "White")
+        esc_message_rectangle = esc_message.get_rect(center=(screen_size[0] - screen_size[0] // 12, screen_size[1] // 14))
+
         player.draw(screen)
         player.update()
 
         obstacle_group.draw(screen)
         obstacle_group.update()
 
-        score = mechanics.display_score(game_font, start_time, screen)
+        screen.blit(pygame.transform.scale(vignette_surface, screen_size), (0, 0))
+        screen.blit(esc_message, esc_message_rectangle)
 
+        score = mechanics.display_score(game_font, start_time, screen)
         current_screen = mechanics.collision_sprite(player, obstacle_group, game_over_sound, score)
 
     elif current_screen == 2:
-        screen.fill((0, 0, 0))
-        marathoner_text = game_font.render("Marathoner", False, "White")
-        marathoner_text_rect = marathoner_text.get_rect(center=(screen_size[0] // 2, screen_size[1] // 2))
-        screen.blit(marathoner_text, marathoner_text_rect)     
+        if not pause_screen_drawn:
+            screen.blit(pygame.transform.scale(pause_surface, screen_size), (0, 0))
+            pause_screen_drawn = True
+
+        esc_message = game_font.render("[ESC]", False, "White")
+        esc_message_rectangle = esc_message.get_rect(center=(screen_size[0] - screen_size[0] // 12, screen_size[1] // 14))
+
+        pause_text = game_font.render("GAME PAUSED", False, "White")
+        fullscreen_text = game_font.render("FULLSCREEN", False, "White")
+        mute_sound = game_font.render("MUTE SOUND", False, "White")
+
+        pause_text_rect = pause_text.get_rect(center=(screen_size[0] // 2, screen_size[1] // 3.5))
+        fullscreen_text_rect = fullscreen_text.get_rect(center=(screen_size[0] // 2, screen_size[1] // 4))
+        mute_sound_rect = mute_sound.get_rect(center=(screen_size[0] // 2, screen_size[1] * 0.9))
+
+        screen.blit(esc_message, esc_message_rectangle)       
+        screen.blit(pause_text, pause_text_rect)
+        #screen.blit(fullscreen_text, fullscreen_text_rect)
+        #screen.blit(mute_sound, mute_sound_rect)
+        
 
     pygame.display.update()
     clock.tick(60)
