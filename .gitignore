@@ -133,3 +133,6 @@ dmypy.json
 
 # Game score
 best_score.txt
+
+# XCFs
+design
