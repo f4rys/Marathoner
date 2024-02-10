@@ -78,12 +78,12 @@ class Game():
         # ENTER FULLSCREEN MODE
         if not self.fullscreen:
             self.screen = pygame.display.set_mode(self.monitor_size, pygame.RESIZABLE)
-            pygame.event.post(pygame.event.Event(pygame.VIDEORESIZE, w=self.monitor_size[0], h=self.monitor_size[1]))
+            self.handle_resize(self.monitor_size[0], self.monitor_size[1])
             self.fullscreen = True
         # LEAVE FULLSCREEN MODE
         elif self.fullscreen:
             self.screen = pygame.display.set_mode((self.original_screen_size[0], self.original_screen_size[1]), pygame.RESIZABLE)
-            pygame.event.post(pygame.event.Event(pygame.VIDEORESIZE, w=self.original_screen_size[0], h=self.original_screen_size[1]))
+            self.handle_resize(self.original_screen_size[0], self.original_screen_size[1])
             self.fullscreen = False
 
     def toggle_music(self):
@@ -120,6 +120,47 @@ class Game():
         self.start_time += int(self.pause_time / 1000)
         self.pause_time = 0
 
+    def quit_game(self):
+        pygame.quit()
+        sys.exit()
+
+    def open_github(self):
+        url = "https://github.com/f4rys"
+        webbrowser.open(url, new=0, autoraise=True)
+
+    def handle_resize(self, w, h):
+        # PAUSE GAME
+        if(self.current_screen == 1):
+            self.current_screen = 2
+            self.pause_time = pygame.time.get_ticks()
+            self.resize_time = pygame.time.get_ticks()
+
+        # FORBID CHANGING ASPECT RATIO
+        new_aspect_ratio = w / h
+
+        if new_aspect_ratio < 1.6 or new_aspect_ratio > 1.9:
+            new_width = w
+            new_height = int(new_width / self.aspect_ratio)
+            self.screen_size = (new_width, new_height)
+        else:
+            self.screen_size = (w, h)
+
+        # RESIZE GAME FONT
+        self.game_font = pygame.font.Font('fonts/pixeled.ttf', (self.screen_size[0] + self.screen_size[1]) // 70)
+
+        # RESIZE SCREEN
+        self.screen = pygame.display.set_mode(self.screen_size, pygame.RESIZABLE)
+
+        # RESIZE PLAYER
+        self.player.sprite.update_screen_size(self.screen_size)
+
+        # RESIZE SCORE rectS
+        self.mechanics.update_screen_size(self.screen_size)
+
+        # RESIZE OBSTACLES
+        for obstacle in self.obstacle_group:
+            obstacle.update_screen_size(self.screen_size)
+
     def run(self):
         # GAME LOOP
         while True:
@@ -134,9 +175,7 @@ class Game():
             for event in pygame.event.get():
                 # QUIT GAME
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-
+                    self.quit_game()
                 if event.type == pygame.KEYDOWN:
                     # START GAME
                     if event.key == pygame.K_SPACE and self.current_screen == 0:
@@ -151,8 +190,7 @@ class Game():
                 if event.type == pygame.MOUSEBUTTONDOWN and self.current_screen == 0: 
                     # OPEN GITHUB
                     if self.screen_size[0] * 0.34 <= mouse[0] <= (self.screen_size[0] * 0.34) + self.screen_size[0] * 0.32 and self.screen_size[1] * 0.05 <= mouse[1] <= (self.screen_size[1] * 0.05) + self.screen_size[1] * 0.06:
-                        url = "https://github.com/f4rys"
-                        webbrowser.open(url, new=0, autoraise=True)
+                        self.open_github()
 
                 if event.type == pygame.MOUSEBUTTONDOWN and self.current_screen == 1: 
                     # OPEN PAUSE MENU THROUGH INGAME BUTTON
@@ -183,38 +221,7 @@ class Game():
 
                 # WHEN RESIZING WINDOW
                 if event.type == pygame.VIDEORESIZE:
-                    
-                    # PAUSE GAME
-                    if(self.current_screen == 1):
-                        self.current_screen = 2
-                        self.pause_time = pygame.time.get_ticks()
-                        self.resize_time = pygame.time.get_ticks()
-
-                    # FORBID CHANGING ASPECT RATIO
-                    new_aspect_ratio = event.w / event.h
-
-                    if new_aspect_ratio < 1.6 or new_aspect_ratio > 1.9:
-                        new_width = event.w
-                        new_height = int(new_width / self.aspect_ratio)
-                        self.screen_size = (new_width, new_height)
-                    else:
-                        self.screen_size = (event.w, event.h)
-
-                    # RESIZE GAME FONT
-                    self.game_font = pygame.font.Font('fonts/pixeled.ttf', (self.screen_size[0] + self.screen_size[1]) // 70)
-
-                    # RESIZE SCREEN
-                    self.screen = pygame.display.set_mode(self.screen_size, pygame.RESIZABLE)
-
-                    # RESIZE PLAYER
-                    self.player.sprite.update_screen_size(self.screen_size)
-
-                    # RESIZE SCORE rectS
-                    self.mechanics.update_screen_size(self.screen_size)
-
-                    # RESIZE OBSTACLES
-                    for obstacle in self.obstacle_group:
-                        obstacle.update_screen_size(self.screen_size)
+                    self.handle_resize(event.w, event.h)
 
             # START / GAME OVER MENU
             if self.current_screen == 0:
