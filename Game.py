@@ -106,6 +106,20 @@ class Game():
             self.channel2.set_volume(1)
             self.sounds_muted = False
 
+    def start_game(self):
+        self.current_screen = 1
+        self.start_time = int(pygame.time.get_ticks() / 1000)
+
+    def pause_game(self):
+        self.pause_time = pygame.time.get_ticks()
+        self.current_screen = 2
+
+    def resume_game(self):
+        self.current_screen = 1
+        self.pause_time = pygame.time.get_ticks() - self.pause_time
+        self.start_time += int(self.pause_time / 1000)
+        self.pause_time = 0
+
     def run(self):
         # GAME LOOP
         while True:
@@ -126,18 +140,13 @@ class Game():
                 if event.type == pygame.KEYDOWN:
                     # START GAME
                     if event.key == pygame.K_SPACE and self.current_screen == 0:
-                        self.current_screen = 1
-                        self.start_time = int(pygame.time.get_ticks() / 1000)
+                        self.start_game()
                     # OPEN PAUSE MENU THROUGH ESC
                     if event.key == pygame.K_ESCAPE and self.current_screen != 2:
-                        self.pause_time = pygame.time.get_ticks()
-                        self.current_screen = 2
+                        self.pause_game()
                     # RETURN FROM PAUSE MENU THROUGH ESC
                     elif event.key == pygame.K_ESCAPE and self.current_screen == 2:
-                        self.current_screen = 1
-                        self.pause_time = pygame.time.get_ticks() - self.pause_time
-                        self.start_time += int(self.pause_time / 1000)
-                        self.pause_time = 0
+                        self.resume_game()
 
                 if event.type == pygame.MOUSEBUTTONDOWN and self.current_screen == 0: 
                     # OPEN GITHUB
@@ -148,16 +157,12 @@ class Game():
                 if event.type == pygame.MOUSEBUTTONDOWN and self.current_screen == 1: 
                     # OPEN PAUSE MENU THROUGH INGAME BUTTON
                     if self.screen_size[0] * 0.867 <= mouse[0] <= (self.screen_size[0] * 0.867) + self.screen_size[0] * 0.1 and self.screen_size[1] // 60 <= mouse[1] <= (self.screen_size[1] // 60) + self.screen_size[1] * 0.1:
-                        self.pause_time = pygame.time.get_ticks()
-                        self.current_screen = 2
+                        self.pause_game()
 
                 elif event.type == pygame.MOUSEBUTTONDOWN and self.current_screen == 2:
                     # RETURN FROM PAUSE MENU THROUGH INGAME BUTTON
                     if self.screen_size[0] * 0.867 <= mouse[0] <= (self.screen_size[0] * 0.867) + self.screen_size[0] * 0.1 and self.screen_size[1] // 60 <= mouse[1] <= (self.screen_size[1] // 60) + self.screen_size[1] * 0.1:
-                        self.current_screen = 1
-                        self.pause_time = pygame.time.get_ticks() - self.pause_time
-                        self.start_time += int(self.pause_time / 1000)
-                        self.pause_time = 0
+                        self.resume_game()
                     # FULLSCREEN
                     if self.screen_size[0] * 0.373 <= mouse[0] <= (self.screen_size[0] * 0.373) + self.screen_size[0] * 0.254 and self.screen_size[1] * 0.47 <= mouse[1] <= (self.screen_size[1] * 0.47) + self.screen_size[1] * 0.06:
                         self.toggle_fullscreen()
