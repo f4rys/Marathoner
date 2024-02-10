@@ -172,8 +172,11 @@ class Game():
             # LOAD BEST SCORE
             best_score = self.mechanics.load_best_score()
 
+            # LOAD EVENTS
+            events = pygame.event.get()
+
             # EVENT HANDLING
-            for event in pygame.event.get():
+            for event in events:
                 # QUIT GAME
                 if event.type == pygame.QUIT:
                     self.quit_game()
@@ -188,33 +191,6 @@ class Game():
                     elif event.key == pygame.K_ESCAPE and self.current_screen == 2:
                         self.resume_game()
 
-                ##if event.type == pygame.MOUSEBUTTONDOWN and self.current_screen == 0: 
-                    # OPEN GITHUB
-                    ##if self.screen_size[0] * 0.34 <= mouse[0] <= (self.screen_size[0] * 0.34) + self.screen_size[0] * 0.32 and self.screen_size[1] * 0.05 <= mouse[1] <= (self.screen_size[1] * 0.05) + self.screen_size[1] * 0.06:
-                        ##self.open_github()
-
-                if event.type == pygame.MOUSEBUTTONDOWN and self.current_screen == 1: 
-                    # OPEN PAUSE MENU THROUGH INGAME BUTTON
-                    if self.screen_size[0] * 0.867 <= mouse[0] <= (self.screen_size[0] * 0.867) + self.screen_size[0] * 0.1 and self.screen_size[1] // 60 <= mouse[1] <= (self.screen_size[1] // 60) + self.screen_size[1] * 0.1:
-                        self.pause_game()
-
-                elif event.type == pygame.MOUSEBUTTONDOWN and self.current_screen == 2:
-                    # RETURN FROM PAUSE MENU THROUGH INGAME BUTTON
-                    if self.screen_size[0] * 0.867 <= mouse[0] <= (self.screen_size[0] * 0.867) + self.screen_size[0] * 0.1 and self.screen_size[1] // 60 <= mouse[1] <= (self.screen_size[1] // 60) + self.screen_size[1] * 0.1:
-                        self.resume_game()
-                    # FULLSCREEN
-                    if self.screen_size[0] * 0.373 <= mouse[0] <= (self.screen_size[0] * 0.373) + self.screen_size[0] * 0.254 and self.screen_size[1] * 0.47 <= mouse[1] <= (self.screen_size[1] * 0.47) + self.screen_size[1] * 0.06:
-                        self.toggle_fullscreen()
-                    # RESET BEST SCORE
-                    if self.screen_size[0] * 0.32 <= mouse[0] <= (self.screen_size[0] * 0.32) + self.screen_size[0] * 0.36 and self.screen_size[1] * 0.57 <= mouse[1] <= (self.screen_size[1] * 0.57) + self.screen_size[1] * 0.06:
-                        self.mechanics.reset_best_score()
-                    # MUSIC
-                    if self.screen_size[0] * 0.38 <= mouse[0] <= (self.screen_size[0] * 0.38) + self.screen_size[0] * 0.241 and self.screen_size[1] * 0.67 <= mouse[1] <= (self.screen_size[1] * 0.67) + self.screen_size[1] * 0.06:
-                        self.toggle_music()
-                    # SOUNDS
-                    if self.screen_size[0] * 0.375 <= mouse[0] <= (self.screen_size[0] * 0.375) + self.screen_size[0] * 0.36 and self.screen_size[1] * 0.77 <= mouse[1] <= (self.screen_size[1] * 0.77) + self.screen_size[1] * 0.06:
-                        self.toggle_sounds()
-
                 # ADD NEW OBSTACLE
                 if event.type == self.obstacle_timer and self.current_screen == 1 and pygame.time.get_ticks() - self.resize_time > 1000:
                     self.resize_time = 0
@@ -227,8 +203,6 @@ class Game():
             # START / GAME OVER MENU
             if self.current_screen == 0:
 
-                
-
                 # SHOW SCORE AFTER LOSING A GAME, 'START THE GAME' MESSAGE INSTEAD
                 if self.score == 0:
                     game_message = self.game_font.render("START THE GAME BY PRESSING 'SPACE'", False, "White")
@@ -237,10 +211,8 @@ class Game():
                     game_message = self.game_font.render(f"YOUR SCORE: {self.score}", False, "White")
 
                 # RENDERS AND RECTANGLES
-                ##github_text = self.game_font.render("[VISIT MY GITHUB]", False, "White")
                 best_score_message = self.game_font.render(f"BEST SCORE: {best_score}", False, "White")
 
-                ##github_text_rect = github_text.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 12))
 
                 best_score_message_rect = best_score_message.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 1.1))
                 game_message_rect = game_message.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 1.25))
@@ -249,9 +221,8 @@ class Game():
                 self.screen.blit(pygame.transform.scale(self.sky_surface, self.screen_size), (0, 0))
                 self.screen.blit(pygame.transform.scale(self.vignette_surface, self.screen_size), (0, 0))
                 self.screen.blit(best_score_message, best_score_message_rect)
-                ##self.screen.blit(github_text, github_text_rect)
-                Button(self.screen_size[0] // 2, self.screen_size[1] // 12, self.game_font, "[VISIT MY GITHUB]", self.screen, self.open_github).process()
                 self.screen.blit(game_message, game_message_rect)
+                Button(self.screen_size[0] // 2, self.screen_size[1] // 12, self.game_font, "[VISIT MY GITHUB]", self.screen, self.open_github, events).process()
 
             # GAME
             elif self.current_screen == 1:
@@ -270,55 +241,46 @@ class Game():
                 # DRAW VIGNETTE
                 self.screen.blit(pygame.transform.scale(self.vignette_surface, self.screen_size), (0, 0))
 
-                # DRAW [ESC] BUTTON
-                esc_message = self.game_font.render("[ESC]", False, "White")
-                esc_message_rect = esc_message.get_rect(center=(self.screen_size[0] - self.screen_size[0] // 12, self.screen_size[1] // 14))
-                self.screen.blit(esc_message, esc_message_rect)
-
                 # DRAW SCORE
                 self.score = self.mechanics.display_score(self.game_font, self.start_time, self.screen)
 
                 # CHECK FOR COLLISIONS
                 self.current_screen = self.mechanics.collision_sprite(self.player, self.obstacle_group, self.game_over_sound, self.channel2, self.score)
 
+                # DRAW [ESC] BUTTON
+                Button(self.screen_size[0] - self.screen_size[0] // 12, self.screen_size[1] // 14, self.game_font, "[ESC]", self.screen, self.pause_game, events).process()
+
             # PAUSE MENU
             elif self.current_screen == 2:
 
                 # RENDERS
                 if self.music_muted:
-                    mute_music_text = self.game_font.render("[UNMUTE MUSIC]", False, "White")
+                    music_message = "[UNMUTE MUSIC]"
                 else:
-                    mute_music_text = self.game_font.render("[MUTE MUSIC]", False, "White")
+                    music_message = "[MUTE MUSIC]"
 
                 if self.sounds_muted:
-                    mute_sound_text = self.game_font.render("[UNMUTE SOUND]", False, "White")
+                    sounds_message = "[UNMUTE SOUND]"
                 else:
-                    mute_sound_text = self.game_font.render("[MUTE SOUND]", False, "White")        
+                    sounds_message = "[MUTE SOUND]"
 
-                esc_message = self.game_font.render("[ESC]", False, "White")
                 pause_text = self.game_font.render("GAME PAUSED", False, "White")
-                fullscreen_text = self.game_font.render("[FULLSCREEN]", False, "White")
                 best_score_text = self.game_font.render(f"BEST SCORE: {best_score}", False, "White")
-                reset_best_score_text = self.game_font.render("[RESET BEST SCORE]", False, "White")
 
                 # RECTANGLES
-                esc_message_rect = esc_message.get_rect(center=(self.screen_size[0] - self.screen_size[0] // 12, self.screen_size[1] // 14))
                 pause_text_rect = pause_text.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 4))
                 best_score_text_rect = best_score_text.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 4 + (self.screen_size[1] // 10) * 1))
-                fullscreen_text_rect = fullscreen_text.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 2))
-                reset_best_score_text_rect = reset_best_score_text.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 2 + (self.screen_size[1] // 10) * 1))
-                mute_music_text_rect  = mute_music_text.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 2 + (self.screen_size[1] // 10) * 2))
-                mute_sound_text_rect = mute_sound_text.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 2 + (self.screen_size[1] // 10) * 3))
 
                 # DRAW ELEMENTS
-                self.screen.blit(pygame.transform.scale(self.pause_surface, self.screen_size), (0, 0))
-                self.screen.blit(esc_message, esc_message_rect)       
+                self.screen.blit(pygame.transform.scale(self.pause_surface, self.screen_size), (0, 0))      
                 self.screen.blit(pause_text, pause_text_rect)
                 self.screen.blit(best_score_text, best_score_text_rect)
-                self.screen.blit(fullscreen_text, fullscreen_text_rect)
-                self.screen.blit(reset_best_score_text, reset_best_score_text_rect)
-                self.screen.blit(mute_music_text, mute_music_text_rect)
-                self.screen.blit(mute_sound_text, mute_sound_text_rect)
+
+                Button(self.screen_size[0] - self.screen_size[0] // 12, self.screen_size[1] // 14, self.game_font, "[ESC]", self.screen, self.resume_game, events).process()
+                Button(self.screen_size[0] // 2, self.screen_size[1] // 2, self.game_font, "[FULLSCREEN]", self.screen, self.toggle_fullscreen, events).process()
+                Button(self.screen_size[0] // 2, self.screen_size[1] // 2 + (self.screen_size[1] // 10) * 1, self.game_font, "[RESET BEST SCORE]", self.screen, self.mechanics.reset_best_score, events).process()
+                Button(self.screen_size[0] // 2, self.screen_size[1] // 2 + (self.screen_size[1] // 10) * 2, self.game_font, music_message, self.screen, self.toggle_music, events).process()
+                Button(self.screen_size[0] // 2, self.screen_size[1] // 2 + (self.screen_size[1] // 10) * 3, self.game_font, sounds_message, self.screen, self.toggle_sounds, events).process()
 
             pygame.display.update()
             self.clock.tick(60)
