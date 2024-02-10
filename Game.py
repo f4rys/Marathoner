@@ -6,6 +6,7 @@ import pygame
 from Obstacle import Obstacle
 from Player import Player
 from Mechanics import Mechanics
+from Button import Button
 
 class Game():
     def __init__(self):
@@ -187,10 +188,10 @@ class Game():
                     elif event.key == pygame.K_ESCAPE and self.current_screen == 2:
                         self.resume_game()
 
-                if event.type == pygame.MOUSEBUTTONDOWN and self.current_screen == 0: 
+                ##if event.type == pygame.MOUSEBUTTONDOWN and self.current_screen == 0: 
                     # OPEN GITHUB
-                    if self.screen_size[0] * 0.34 <= mouse[0] <= (self.screen_size[0] * 0.34) + self.screen_size[0] * 0.32 and self.screen_size[1] * 0.05 <= mouse[1] <= (self.screen_size[1] * 0.05) + self.screen_size[1] * 0.06:
-                        self.open_github()
+                    ##if self.screen_size[0] * 0.34 <= mouse[0] <= (self.screen_size[0] * 0.34) + self.screen_size[0] * 0.32 and self.screen_size[1] * 0.05 <= mouse[1] <= (self.screen_size[1] * 0.05) + self.screen_size[1] * 0.06:
+                        ##self.open_github()
 
                 if event.type == pygame.MOUSEBUTTONDOWN and self.current_screen == 1: 
                     # OPEN PAUSE MENU THROUGH INGAME BUTTON
@@ -226,6 +227,8 @@ class Game():
             # START / GAME OVER MENU
             if self.current_screen == 0:
 
+                
+
                 # SHOW SCORE AFTER LOSING A GAME, 'START THE GAME' MESSAGE INSTEAD
                 if self.score == 0:
                     game_message = self.game_font.render("START THE GAME BY PRESSING 'SPACE'", False, "White")
@@ -234,10 +237,11 @@ class Game():
                     game_message = self.game_font.render(f"YOUR SCORE: {self.score}", False, "White")
 
                 # RENDERS AND RECTANGLES
-                github_text = self.game_font.render("[VISIT MY GITHUB]", False, "White")
+                ##github_text = self.game_font.render("[VISIT MY GITHUB]", False, "White")
                 best_score_message = self.game_font.render(f"BEST SCORE: {best_score}", False, "White")
 
-                github_text_rect = github_text.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 12))
+                ##github_text_rect = github_text.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 12))
+
                 best_score_message_rect = best_score_message.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 1.1))
                 game_message_rect = game_message.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 1.25))
 
@@ -245,7 +249,8 @@ class Game():
                 self.screen.blit(pygame.transform.scale(self.sky_surface, self.screen_size), (0, 0))
                 self.screen.blit(pygame.transform.scale(self.vignette_surface, self.screen_size), (0, 0))
                 self.screen.blit(best_score_message, best_score_message_rect)
-                self.screen.blit(github_text, github_text_rect)
+                ##self.screen.blit(github_text, github_text_rect)
+                Button(self.screen_size[0] // 2, self.screen_size[1] // 12, self.game_font, "[VISIT MY GITHUB]", self.screen, self.open_github).process()
                 self.screen.blit(game_message, game_message_rect)
 
             # GAME
