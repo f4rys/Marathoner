@@ -5,7 +5,7 @@ from random import choice
 import pygame
 from Obstacle import Obstacle
 from Player import Player
-from Mechanics import Mechanics
+from ScoreSystem import ScoreSystem
 from Button import Button
 
 class Game():
@@ -57,10 +57,10 @@ class Game():
         self.clock = pygame.time.Clock()
 
         # FONT
-        self.game_font = pygame.font.Font('fonts/pixeled.ttf', (self.screen_size[0] + self.screen_size[1]) // 70)
+        self.game_font = pygame.font.Font('font/pixeled.ttf', (self.screen_size[0] + self.screen_size[1]) // 70)
 
-        # MECHANICS
-        self.mechanics = Mechanics(self.screen_size)
+        # SCORE SYSTEM
+        self.score_system = ScoreSystem(self.screen_size)
 
         # VARIABLES
         self.start_time = 0
@@ -125,6 +125,16 @@ class Game():
         pygame.quit()
         sys.exit()
 
+    def collision_sprite(self):
+        # MASKS FOR PIXEL PERFECT COLLISION DETECTION
+        if pygame.sprite.spritecollideany(self.player.sprite, self.obstacle_group, pygame.sprite.collide_mask):
+            self.obstacle_group.empty()
+            self.channel2.play(self.game_over_sound)
+            self.score_system.save_best_score(self.score)
+            return 0
+        else:
+            return 1
+        
     def open_github(self):
         url = "https://github.com/f4rys"
         webbrowser.open(url, new=0, autoraise=True)
@@ -147,7 +157,7 @@ class Game():
             self.screen_size = (w, h)
 
         # RESIZE GAME FONT
-        self.game_font = pygame.font.Font('fonts/pixeled.ttf', (self.screen_size[0] + self.screen_size[1]) // 70)
+        self.game_font = pygame.font.Font('font/pixeled.ttf', (self.screen_size[0] + self.screen_size[1]) // 70)
 
         # RESIZE SCREEN
         self.screen = pygame.display.set_mode(self.screen_size, pygame.RESIZABLE)
@@ -156,7 +166,7 @@ class Game():
         self.player.sprite.update_screen_size(self.screen_size)
 
         # RESIZE SCORE rectS
-        self.mechanics.update_screen_size(self.screen_size)
+        self.score_system.update_screen_size(self.screen_size)
 
         # RESIZE OBSTACLES
         for obstacle in self.obstacle_group:
@@ -170,7 +180,7 @@ class Game():
             mouse = pygame.mouse.get_pos()
 
             # LOAD BEST SCORE
-            best_score = self.mechanics.load_best_score()
+            best_score = self.score_system.load_best_score()
 
             # LOAD EVENTS
             events = pygame.event.get()
@@ -242,10 +252,10 @@ class Game():
                 self.screen.blit(pygame.transform.scale(self.vignette_surface, self.screen_size), (0, 0))
 
                 # DRAW SCORE
-                self.score = self.mechanics.display_score(self.game_font, self.start_time, self.screen)
+                self.score = self.score_system.display_score(self.game_font, self.start_time, self.screen)
 
                 # CHECK FOR COLLISIONS
-                self.current_screen = self.mechanics.collision_sprite(self.player, self.obstacle_group, self.game_over_sound, self.channel2, self.score)
+                self.current_screen = self.collision_sprite()
 
                 # DRAW [ESC] BUTTON
                 Button(self.screen_size[0] - self.screen_size[0] // 12, self.screen_size[1] // 14, self.game_font, "[ESC]", self.screen, self.pause_game, events).process()
@@ -281,7 +291,7 @@ class Game():
 
                 Button(self.screen_size[0] - self.screen_size[0] // 12, self.screen_size[1] // 14, self.game_font, "[ESC]", self.screen, self.resume_game, events).process()
                 Button(self.screen_size[0] // 2, self.screen_size[1] // 2, self.game_font, "[FULLSCREEN]", self.screen, self.toggle_fullscreen, events).process()
-                Button(self.screen_size[0] // 2, self.screen_size[1] // 2 + (self.screen_size[1] // 10) * 1, self.game_font, "[RESET BEST SCORE]", self.screen, self.mechanics.reset_best_score, events).process()
+                Button(self.screen_size[0] // 2, self.screen_size[1] // 2 + (self.screen_size[1] // 10) * 1, self.game_font, "[RESET BEST SCORE]", self.screen, self.score_system.reset_best_score, events).process()
                 Button(self.screen_size[0] // 2, self.screen_size[1] // 2 + (self.screen_size[1] // 10) * 2, self.game_font, music_message, self.screen, self.toggle_music, events).process()
                 Button(self.screen_size[0] // 2, self.screen_size[1] // 2 + (self.screen_size[1] // 10) * 3, self.game_font, sounds_message, self.screen, self.toggle_sounds, events).process()
 
