@@ -34,11 +34,11 @@ class Player(pygame.sprite.Sprite):
         self.jump_sound = pygame.mixer.Sound('audio/jump.ogg')
         self.jump_sound.set_volume(0.5)
 
-    def player_input(self):
+    def player_input(self, channel):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE] and self.rect.bottom >= self.screen_size[1] - self.screen_size[1] // 3.5:
             self.gravity = -0.02548 * self.screen_size[1] - 5.849
-            self.jump_sound.play()
+            channel.play(self.jump_sound)
 
     def apply_gravity(self):
         self.gravity += 1
@@ -58,8 +58,8 @@ class Player(pygame.sprite.Sprite):
                 self.run_index = 0
             self.image = self.player_run[int(self.run_index)]
 
-    def update(self):
-        self.player_input()
+    def update(self, channel):
+        self.player_input(channel)
         self.apply_gravity()
         self.animation_state()
 

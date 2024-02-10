@@ -1,4 +1,4 @@
-from cryptography.fernet import Fernet
+from cryptography.fernet import Fernet, InvalidToken
 import pygame
 
 class Mechanics():
@@ -21,7 +21,7 @@ class Mechanics():
             fernet = Fernet(key)
             decrypted_data = fernet.decrypt(encrypted_data)
             best_score = int(decrypted_data.decode())
-        except (FileNotFoundError, ValueError):
+        except (FileNotFoundError, ValueError, InvalidToken):
             best_score = 0
         return best_score
 
@@ -42,10 +42,10 @@ class Mechanics():
         screen.blit(self.score_surface, self.score_rectangle)
         return current_time
 
-    def collision_sprite(self, player, obstacle_group, game_over_sound, score):
+    def collision_sprite(self, player, obstacle_group, game_over_sound, channel, score):
         if pygame.sprite.spritecollideany(player.sprite, obstacle_group, pygame.sprite.collide_mask):
             obstacle_group.empty()
-            game_over_sound.play()
+            channel.play(game_over_sound)
             self.save_best_score(score)
             return 0
         else:
@@ -55,3 +55,10 @@ class Mechanics():
         self.screen_size = screen_size
         if(self.score_rectangle and self.score_surface):
             self.score_rectangle = self.score_surface.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 14))
+
+    def reset_best_score(self):
+        try:
+            with open('best_score.txt', 'w') as file:
+                file.truncate(0)
+        except Exception as e:
+            print(f"Error: {e}")
