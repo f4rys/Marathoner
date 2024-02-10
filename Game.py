@@ -86,6 +86,26 @@ class Game():
             pygame.event.post(pygame.event.Event(pygame.VIDEORESIZE, w=self.original_screen_size[0], h=self.original_screen_size[1]))
             self.fullscreen = False
 
+    def toggle_music(self):
+        # MUTE MUSIC
+        if not self.music_muted:
+            self.channel1.pause()
+            self.music_muted = True
+        # UNMUTE MUSIC
+        elif self.music_muted:
+            self.channel1.unpause()
+            self.music_muted = False
+
+    def toggle_sounds(self):
+        # MUTE SOUNDS
+        if not self.sounds_muted:
+            self.channel2.set_volume(0)
+            self.sounds_muted = True
+        # UNMUTE SOUNDS
+        elif self.sounds_muted:
+            self.channel2.set_volume(1)
+            self.sounds_muted = False
+
     def run(self):
         # GAME LOOP
         while True:
@@ -144,22 +164,12 @@ class Game():
                     # RESET BEST SCORE
                     if self.screen_size[0] * 0.32 <= mouse[0] <= (self.screen_size[0] * 0.32) + self.screen_size[0] * 0.36 and self.screen_size[1] * 0.57 <= mouse[1] <= (self.screen_size[1] * 0.57) + self.screen_size[1] * 0.06:
                         self.mechanics.reset_best_score()
-                    # MUTE MUSIC
-                    if self.screen_size[0] * 0.38 <= mouse[0] <= (self.screen_size[0] * 0.38) + self.screen_size[0] * 0.241 and self.screen_size[1] * 0.67 <= mouse[1] <= (self.screen_size[1] * 0.67) + self.screen_size[1] * 0.06 and not self.music_muted:
-                        self.channel1.pause()
-                        self.music_muted = True
-                    # UNMUTE MUSIC
-                    elif self.screen_size[0] * 0.38 <= mouse[0] <= (self.screen_size[0] * 0.38) + self.screen_size[0] * 0.241 and self.screen_size[1] * 0.67 <= mouse[1] <= (self.screen_size[1] * 0.67) + self.screen_size[1] * 0.06 and self.music_muted:
-                        self.channel1.unpause()
-                        self.music_muted = False
-                    # MUTE SOUNDS
-                    if self.screen_size[0] * 0.375 <= mouse[0] <= (self.screen_size[0] * 0.375) + self.screen_size[0] * 0.36 and self.screen_size[1] * 0.77 <= mouse[1] <= (self.screen_size[1] * 0.77) + self.screen_size[1] * 0.06 and not self.sounds_muted:
-                        self.channel2.set_volume(0)
-                        self.sounds_muted = True
-                    # UNMUTE SOUNDS
-                    elif self.screen_size[0] * 0.375 <= mouse[0] <= (self.screen_size[0] * 0.375) + self.screen_size[0] * 0.36 and self.screen_size[1] * 0.77 <= mouse[1] <= (self.screen_size[1] * 0.77) + self.screen_size[1] * 0.06 and self.sounds_muted:
-                        self.channel2.set_volume(1)
-                        self.sounds_muted = False
+                    # MUSIC
+                    if self.screen_size[0] * 0.38 <= mouse[0] <= (self.screen_size[0] * 0.38) + self.screen_size[0] * 0.241 and self.screen_size[1] * 0.67 <= mouse[1] <= (self.screen_size[1] * 0.67) + self.screen_size[1] * 0.06:
+                        self.toggle_music()
+                    # SOUNDS
+                    if self.screen_size[0] * 0.375 <= mouse[0] <= (self.screen_size[0] * 0.375) + self.screen_size[0] * 0.36 and self.screen_size[1] * 0.77 <= mouse[1] <= (self.screen_size[1] * 0.77) + self.screen_size[1] * 0.06:
+                        self.toggle_sounds()
 
                 # ADD NEW OBSTACLE
                 if event.type == self.obstacle_timer and self.current_screen == 1 and pygame.time.get_ticks() - self.resize_time > 1000:
