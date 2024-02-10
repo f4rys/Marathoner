@@ -42,7 +42,7 @@ class Player(pygame.sprite.Sprite):
         # JUMP
         if keys[pygame.K_SPACE] and self.rect.bottom >= self.screen_size[1] - self.screen_size[1] // 3.5:
             # GRAVITY RELATIVE TO SCREEN SIZE
-            self.gravity = -0.02548 * self.screen_size[1] - 5.849
+            self.gravity = -0.01403 * self.screen_size[1] - 5.978 
             # PLAY JUMP SOUND
             channel.play(self.jump_sound)
 
