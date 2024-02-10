@@ -43,6 +43,7 @@ class Mechanics():
         return current_time
 
     def collision_sprite(self, player, obstacle_group, game_over_sound, channel, score):
+        # MASKS FOR PIXEL PERFECT COLLISION DETECTION
         if pygame.sprite.spritecollideany(player.sprite, obstacle_group, pygame.sprite.collide_mask):
             obstacle_group.empty()
             channel.play(game_over_sound)
@@ -57,6 +58,7 @@ class Mechanics():
             self.score_rectangle = self.score_surface.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 14))
 
     def reset_best_score(self):
+        # ERASE CONTENT FROM BEST SCORE FILE
         try:
             with open('best_score.txt', 'w') as file:
                 file.truncate(0)
