@@ -17,7 +17,8 @@ class Game():
         self.monitor_size = [info.current_w, info.current_h]
 
         # WINDOW SETTINGS
-        self.screen_size = (int(info.current_w / 1.5), int(info.current_h / 1.5))
+        self.original_screen_size = (int(info.current_w / 1.5), int(info.current_h / 1.5))
+        self.screen_size = self.original_screen_size
         self.aspect_ratio = self.screen_size[0] / self.screen_size[1]
 
         self.screen = pygame.display.set_mode(self.screen_size, pygame.RESIZABLE)
@@ -73,6 +74,18 @@ class Game():
         self.music_muted = False
         self.sounds_muted = False
 
+    def toggle_fullscreen(self):
+        # ENTER FULLSCREEN MODE
+        if not self.fullscreen:
+            self.screen = pygame.display.set_mode(self.monitor_size, pygame.RESIZABLE)
+            pygame.event.post(pygame.event.Event(pygame.VIDEORESIZE, w=self.monitor_size[0], h=self.monitor_size[1]))
+            self.fullscreen = True
+        # LEAVE FULLSCREEN MODE
+        elif self.fullscreen:
+            self.screen = pygame.display.set_mode((self.original_screen_size[0], self.original_screen_size[1]), pygame.RESIZABLE)
+            pygame.event.post(pygame.event.Event(pygame.VIDEORESIZE, w=self.original_screen_size[0], h=self.original_screen_size[1]))
+            self.fullscreen = False
+
     def run(self):
         # GAME LOOP
         while True:
@@ -125,16 +138,9 @@ class Game():
                         self.pause_time = pygame.time.get_ticks() - self.pause_time
                         self.start_time += int(self.pause_time / 1000)
                         self.pause_time = 0
-                    # ENTER FULLSCREEN MODE
-                    if self.screen_size[0] * 0.373 <= mouse[0] <= (self.screen_size[0] * 0.373) + self.screen_size[0] * 0.254 and self.screen_size[1] * 0.47 <= mouse[1] <= (self.screen_size[1] * 0.47) + self.screen_size[1] * 0.06 and not self.fullscreen:
-                        self.screen = pygame.display.set_mode(self.monitor_size, pygame.RESIZABLE)
-                        self.fullscreen = True
-                        pygame.event.post(pygame.event.Event(pygame.VIDEORESIZE, size=self.monitor_size, w=self.monitor_size[0], h=self.monitor_size[1]))
-                    # LEAVE FULLSCREEN MODE
-                    elif self.screen_size[0] * 0.373 <= mouse[0] <= (self.screen_size[0] * 0.373) + self.screen_size[0] * 0.254 and self.screen_size[1] * 0.47 <= mouse[1] <= (self.screen_size[1] * 0.47) + self.screen_size[1] * 0.06 and self.fullscreen:
-                        self.screen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
-                        pygame.event.post(pygame.event.Event(pygame.VIDEORESIZE, size=(1280,720), w=1280, h=720))
-                        self.fullscreen = False
+                    # FULLSCREEN
+                    if self.screen_size[0] * 0.373 <= mouse[0] <= (self.screen_size[0] * 0.373) + self.screen_size[0] * 0.254 and self.screen_size[1] * 0.47 <= mouse[1] <= (self.screen_size[1] * 0.47) + self.screen_size[1] * 0.06:
+                        self.toggle_fullscreen()
                     # RESET BEST SCORE
                     if self.screen_size[0] * 0.32 <= mouse[0] <= (self.screen_size[0] * 0.32) + self.screen_size[0] * 0.36 and self.screen_size[1] * 0.57 <= mouse[1] <= (self.screen_size[1] * 0.57) + self.screen_size[1] * 0.06:
                         self.mechanics.reset_best_score()
@@ -177,7 +183,7 @@ class Game():
                         new_height = int(new_width / self.aspect_ratio)
                         self.screen_size = (new_width, new_height)
                     else:
-                        self.screen_size = event.size
+                        self.screen_size = (event.w, event.h)
 
                     # RESIZE GAME FONT
                     self.game_font = pygame.font.Font('fonts/pixeled.ttf', (self.screen_size[0] + self.screen_size[1]) // 70)
