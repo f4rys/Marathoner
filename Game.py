@@ -134,7 +134,7 @@ class Game():
             return 0
         else:
             return 1
-        
+
     def open_github(self):
         url = "https://github.com/f4rys"
         webbrowser.open(url, new=0, autoraise=True)
@@ -213,26 +213,26 @@ class Game():
             # START / GAME OVER MENU
             if self.current_screen == 0:
 
-                # SHOW SCORE AFTER LOSING A GAME, 'START THE GAME' MESSAGE INSTEAD
-                if self.score == 0:
-                    game_message = self.game_font.render("START THE GAME BY PRESSING 'SPACE'", False, "White")
-
-                else:
-                    game_message = self.game_font.render(f"YOUR SCORE: {self.score}", False, "White")
-
                 # RENDERS AND RECTANGLES
                 best_score_message = self.game_font.render(f"BEST SCORE: {best_score}", False, "White")
-
-
                 best_score_message_rect = best_score_message.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 1.1))
-                game_message_rect = game_message.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 1.25))
 
                 # DRAW ELEMENTS
                 self.screen.blit(pygame.transform.scale(self.sky_surface, self.screen_size), (0, 0))
                 self.screen.blit(pygame.transform.scale(self.vignette_surface, self.screen_size), (0, 0))
                 self.screen.blit(best_score_message, best_score_message_rect)
-                self.screen.blit(game_message, game_message_rect)
+                Button(self.screen_size[0] // 2, self.screen_size[1] // 1.25, self.game_font, "CLICK OR PRESS 'SPACE' TO START", self.screen, self.start_game, events).process()
                 Button(self.screen_size[0] // 2, self.screen_size[1] // 12, self.game_font, "[VISIT MY GITHUB]", self.screen, self.open_github, events).process()
+
+                if self.score != 0:
+                    game_over_message = self.game_font.render("GAME OVER", False, "White")
+                    game_over_message_rect = game_over_message.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 2.1))
+
+                    score_message = self.game_font.render(f"YOUR SCORE: {self.score}", False, "White")
+                    score_message_rect = score_message.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 1.7))
+
+                    self.screen.blit(game_over_message,  game_over_message_rect)
+                    self.screen.blit(score_message, score_message_rect)
 
             # GAME
             elif self.current_screen == 1:
