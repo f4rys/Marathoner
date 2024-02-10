@@ -8,7 +8,7 @@ class Mechanics():
         self.score_surface = None
 
     def load_encryption_key(self):
-        with open('key.key', 'rb') as file:
+        with open('.key', 'rb') as file:
             key = file.read()
         return key
 
