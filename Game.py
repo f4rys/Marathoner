@@ -223,6 +223,7 @@ class Game():
                 self.screen.blit(best_score_message, best_score_message_rect)
                 Button(self.screen_size[0] // 2, self.screen_size[1] // 1.25, self.game_font, "CLICK OR PRESS 'SPACE' TO START", self.screen, self.start_game, events).process()
                 Button(self.screen_size[0] // 2, self.screen_size[1] // 12, self.game_font, "[VISIT MY GITHUB]", self.screen, self.open_github, events).process()
+                Button(self.screen_size[0] - self.screen_size[0] // 14, self.screen_size[1] // 14, self.game_font, "[X]", self.screen, self.quit_game, events, "Red").process()
 
                 if self.score != 0:
                     game_over_message = self.game_font.render("GAME OVER", False, "White")
@@ -257,8 +258,9 @@ class Game():
                 # CHECK FOR COLLISIONS
                 self.current_screen = self.collision_sprite()
 
-                # DRAW [ESC] BUTTON
-                Button(self.screen_size[0] - self.screen_size[0] // 12, self.screen_size[1] // 14, self.game_font, "[ESC]", self.screen, self.pause_game, events).process()
+                # DRAW [ESC] and [X] BUTTONS
+                Button(self.screen_size[0] - self.screen_size[0] // 6, self.screen_size[1] // 14, self.game_font, "[ESC]", self.screen, self.pause_game, events).process()
+                Button(self.screen_size[0] - self.screen_size[0] // 14, self.screen_size[1] // 14, self.game_font, "[X]", self.screen, self.quit_game, events, "Red").process()
 
             # PAUSE MENU
             elif self.current_screen == 2:
@@ -289,7 +291,8 @@ class Game():
                 self.screen.blit(pause_text, pause_text_rect)
                 self.screen.blit(best_score_text, best_score_text_rect)
 
-                Button(self.screen_size[0] - self.screen_size[0] // 12, self.screen_size[1] // 14, self.game_font, "[ESC]", self.screen, self.resume_game, events).process()
+                Button(self.screen_size[0] - self.screen_size[0] // 6, self.screen_size[1] // 14, self.game_font, "[ESC]", self.screen, self.resume_game, events).process()
+                Button(self.screen_size[0] - self.screen_size[0] // 14, self.screen_size[1] // 14, self.game_font, "[X]", self.screen, self.quit_game, events, "Red").process()
                 Button(self.screen_size[0] // 2, self.screen_size[1] // 2, self.game_font, "[FULLSCREEN]", self.screen, self.toggle_fullscreen, events).process()
                 Button(self.screen_size[0] // 2, self.screen_size[1] // 2 + (self.screen_size[1] // 10) * 1, self.game_font, "[RESET BEST SCORE]", self.screen, self.score_system.reset_best_score, events).process()
                 Button(self.screen_size[0] // 2, self.screen_size[1] // 2 + (self.screen_size[1] // 10) * 2, self.game_font, music_message, self.screen, self.toggle_music, events).process()
