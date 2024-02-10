@@ -185,7 +185,7 @@ class Game():
                     if event.key == pygame.K_SPACE and self.current_screen == 0:
                         self.start_game()
                     # OPEN PAUSE MENU THROUGH ESC
-                    if event.key == pygame.K_ESCAPE and self.current_screen != 2:
+                    if event.key == pygame.K_ESCAPE and self.current_screen == 1:
                         self.pause_game()
                     # RETURN FROM PAUSE MENU THROUGH ESC
                     elif event.key == pygame.K_ESCAPE and self.current_screen == 2:
@@ -252,6 +252,9 @@ class Game():
 
             # PAUSE MENU
             elif self.current_screen == 2:
+
+                # DRAW BACKGROUND
+                self.screen.blit(pygame.transform.scale(self.sky_surface, self.screen_size), (0, 0))
 
                 # RENDERS
                 if self.music_muted:
