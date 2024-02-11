@@ -6,13 +6,6 @@
   </p>
 </div>
 
-<div align="center">
-  <p>
-    <img src="https://imgur.com/77ErLxn.png" width="100" height="100"/>
-  </p>
-</div>
-
-
 <br/>
 
 # 
