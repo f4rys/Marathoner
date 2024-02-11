@@ -3,6 +3,8 @@ import pygame
 class ScoreSystem():
     def __init__(self, screen_size):
         self.screen_size = screen_size
+        self.score_surface = None
+        self.score_rectangle = None
 
     def load_best_score(self):
         try:
