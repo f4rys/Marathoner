@@ -3,3 +3,6 @@ __pycache__/
 .vscode
 best_score.txt
 design
+dist
+build
+*.spec

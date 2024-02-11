@@ -7,10 +7,17 @@ from Obstacle import Obstacle
 from Player import Player
 from ScoreSystem import ScoreSystem
 from Button import Button
+from resource_path import resource_path
 
 class Game():
     def __init__(self):
         pygame.init()
+
+        # CREATE FOLDER TO STORE BEST SCORE IF NOT EXIST YET
+        try:
+            os.mkdir(os.path.expanduser("~") + '/Marathoner')
+        except FileExistsError:
+            pass
 
         # CURRENT MONITOR
         os.environ['SDL_VIDEO_CENTERED'] = '1'
@@ -24,7 +31,7 @@ class Game():
 
         self.screen = pygame.display.set_mode(self.screen_size, pygame.RESIZABLE)
         pygame.display.set_caption("Marathoner")
-        pygame.display.set_icon(pygame.image.load('icon.png'))
+        pygame.display.set_icon(pygame.image.load(resource_path('icon.ico')))
 
         # PLAYER
         self.player = pygame.sprite.GroupSingle()
@@ -36,14 +43,14 @@ class Game():
         pygame.time.set_timer(self.obstacle_timer, 1500)
 
         # SURFACES
-        self.sky_surface = pygame.image.load('images/sky.jpg').convert()
-        self.ground_surface = pygame.image.load('images/ground.png').convert_alpha()
-        self.vignette_surface = pygame.image.load('images/vignette.png').convert_alpha()
-        self.pause_surface = pygame.image.load('images/pause.png').convert_alpha()
+        self.sky_surface = pygame.image.load(resource_path('images/sky.jpg')).convert()
+        self.ground_surface = pygame.image.load(resource_path('images/ground.png')).convert_alpha()
+        self.vignette_surface = pygame.image.load(resource_path('images/vignette.png')).convert_alpha()
+        self.pause_surface = pygame.image.load(resource_path('images/pause.png')).convert_alpha()
 
         # MUSIC & SOUNDS
-        self.game_over_sound = pygame.mixer.Sound('audio/game_over.ogg')
-        theme_sound = pygame.mixer.Sound('audio/theme.ogg')
+        self.game_over_sound = pygame.mixer.Sound(resource_path('audio/game_over.ogg'))
+        theme_sound = pygame.mixer.Sound(resource_path('audio/theme.ogg'))
 
         self.game_over_sound.set_volume(0.5)
         theme_sound.set_volume(0.5)
@@ -57,7 +64,7 @@ class Game():
         self.clock = pygame.time.Clock()
 
         # FONT
-        self.game_font = pygame.font.Font('font/pixeled.ttf', (self.screen_size[0] + self.screen_size[1]) // 70)
+        self.game_font = pygame.font.Font(resource_path('font/pixeled.ttf'), (self.screen_size[0] + self.screen_size[1]) // 70)
 
         # SCORE SYSTEM
         self.score_system = ScoreSystem(self.screen_size)
@@ -157,7 +164,7 @@ class Game():
             self.screen_size = (w, h)
 
         # RESIZE GAME FONT
-        self.game_font = pygame.font.Font('font/pixeled.ttf', (self.screen_size[0] + self.screen_size[1]) // 70)
+        self.game_font = pygame.font.Font(resource_path('font/pixeled.ttf'), (self.screen_size[0] + self.screen_size[1]) // 70)
 
         # RESIZE SCREEN
         self.screen = pygame.display.set_mode(self.screen_size, pygame.RESIZABLE)

@@ -1,5 +1,6 @@
 import pygame
 from random import randint
+from resource_path import resource_path
 
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, type, screen_size):
@@ -11,10 +12,10 @@ class Obstacle(pygame.sprite.Sprite):
 
     def load(self):
         if self.type == 'stone1':
-            image = pygame.image.load('images/stone1.png').convert_alpha()
+            image = pygame.image.load(resource_path('images/stone1.png')).convert_alpha()
             y_pos = self.screen_size[1] * 0.74
         else:
-            image = pygame.image.load('images/stone2.png').convert_alpha()
+            image = pygame.image.load(resource_path('images/stone2.png')).convert_alpha()
             y_pos = self.screen_size[1] * 0.49
 
         multiplier = self.screen_size[1] * 0.0015

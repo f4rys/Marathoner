@@ -1,4 +1,5 @@
 import pygame
+from resource_path import resource_path
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, screen_size):
@@ -10,14 +11,14 @@ class Player(pygame.sprite.Sprite):
         
     def load(self):
         # RUNNING ANIMATION FRAMES
-        player_run1 = pygame.image.load('images/run1.png').convert_alpha()
-        player_run2 = pygame.image.load('images/run2.png').convert_alpha()
-        player_run3 = pygame.image.load('images/run3.png').convert_alpha()
+        player_run1 = pygame.image.load(resource_path('images/run1.png')).convert_alpha()
+        player_run2 = pygame.image.load(resource_path('images/run2.png')).convert_alpha()
+        player_run3 = pygame.image.load(resource_path('images/run3.png')).convert_alpha()
         self.player_run = [player_run1, player_run2, player_run3]
 
         # JUMPING ANIMATION FRAMES
-        player_jump1 = pygame.image.load('images/jump1.png').convert_alpha()
-        player_jump2 = pygame.image.load('images/jump2.png').convert_alpha()
+        player_jump1 = pygame.image.load(resource_path('images/jump1.png')).convert_alpha()
+        player_jump2 = pygame.image.load(resource_path('images/jump2.png')).convert_alpha()
         self.player_jump = [player_jump1, player_jump2]
 
         # PLAYER DIMENSIONS RELATIVE TO SCREEN SIZE
@@ -34,7 +35,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(midbottom=(initial_x, initial_y))
         self.gravity = 0
 
-        self.jump_sound = pygame.mixer.Sound('audio/jump.ogg')
+        self.jump_sound = pygame.mixer.Sound(resource_path('audio/jump.ogg'))
         self.jump_sound.set_volume(0.5)
 
     def player_input(self, channel):
