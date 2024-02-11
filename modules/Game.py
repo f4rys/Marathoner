@@ -3,10 +3,10 @@ import sys
 import webbrowser
 from random import choice
 import pygame
-from Obstacle import Obstacle
-from Player import Player
-from ScoreSystem import ScoreSystem
-from Button import Button
+from modules.Obstacle import Obstacle
+from modules.Player import Player
+from modules.ScoreSystem import ScoreSystem
+from modules.Button import Button
 from resource_path import resource_path
 
 class Game():
@@ -31,7 +31,7 @@ class Game():
 
         self.screen = pygame.display.set_mode(self.screen_size, pygame.RESIZABLE)
         pygame.display.set_caption("Marathoner")
-        pygame.display.set_icon(pygame.image.load(resource_path('icon.ico')))
+        pygame.display.set_icon(pygame.image.load(resource_path('images/icon.ico')))
 
         # PLAYER
         self.player = pygame.sprite.GroupSingle()

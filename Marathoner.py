@@ -1,4 +1,4 @@
-from Game import Game
+from modules.Game import Game
 
 if __name__ == "__main__":
     marathoner = Game()
