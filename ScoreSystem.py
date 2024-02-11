@@ -1,39 +1,27 @@
-from cryptography.fernet import Fernet, InvalidToken
 import pygame
 
 class ScoreSystem():
     def __init__(self, screen_size):
         self.screen_size = screen_size
-        self.score_rectangle = None
-        self.score_surface = None
-
-    def load_encryption_key(self):
-        with open('.key', 'rb') as file:
-            key = file.read()
-        return key
 
     def load_best_score(self):
         try:
-            key = self.load_encryption_key()
-            with open('best_score.txt', 'rb') as file:
-                encrypted_data = file.read()
-
-            fernet = Fernet(key)
-            decrypted_data = fernet.decrypt(encrypted_data)
-            best_score = int(decrypted_data.decode())
-        except (FileNotFoundError, ValueError, InvalidToken):
-            best_score = 0
-        return best_score
-
+            with open('best_score.txt', 'r') as file:
+                best_score = int(file.read())
+                return best_score
+        except FileNotFoundError:
+            return 0
+        except ValueError:
+            return 0
+        
     def save_best_score(self, score):
         best_score = self.load_best_score()
         if score > best_score:
-            key = self.load_encryption_key()
-            fernet = Fernet(key)
-            encrypted_data = fernet.encrypt(str(score).encode())
-
-            with open('best_score.txt', 'wb') as file:
-                file.write(encrypted_data)
+            try:
+                with open('best_score.txt', 'w') as file:
+                    file.write(str(score))
+            except Exception as e:
+                print(f"Error while saving best score: {e}")
 
     def display_score(self, game_font, start_time, screen):
         current_time = int(pygame.time.get_ticks()/1000) - start_time
@@ -48,9 +36,8 @@ class ScoreSystem():
             self.score_rectangle = self.score_surface.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 14))
 
     def reset_best_score(self):
-        # ERASE CONTENT FROM BEST SCORE FILE
         try:
             with open('best_score.txt', 'w') as file:
-                file.truncate(0)
-        except Exception as e:
+                file.write('0')
+        except IOError as e:
             print(f"Error: {e}")
