@@ -2,7 +2,9 @@ import os
 import sys
 import webbrowser
 from random import choice
+
 import pygame
+
 from modules.Obstacle import Obstacle
 from modules.Player import Player
 from modules.ScoreSystem import ScoreSystem
@@ -148,7 +150,7 @@ class Game():
 
     def handle_resize(self, w, h):
         # PAUSE GAME
-        if(self.current_screen == 1):
+        if self.current_screen == 1:
             self.current_screen = 2
             self.pause_time = pygame.time.get_ticks()
             self.resize_time = pygame.time.get_ticks()
@@ -184,7 +186,7 @@ class Game():
         while True:
 
             # GET MOUSE POSITION
-            mouse = pygame.mouse.get_pos()
+            #mouse = pygame.mouse.get_pos()
 
             # LOAD BEST SCORE
             best_score = self.score_system.load_best_score()
@@ -294,7 +296,7 @@ class Game():
                 best_score_text_rect = best_score_text.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 4 + (self.screen_size[1] // 10) * 1))
 
                 # DRAW ELEMENTS
-                self.screen.blit(pygame.transform.scale(self.pause_surface, self.screen_size), (0, 0))      
+                self.screen.blit(pygame.transform.scale(self.pause_surface, self.screen_size), (0, 0))
                 self.screen.blit(pause_text, pause_text_rect)
                 self.screen.blit(best_score_text, best_score_text_rect)
 

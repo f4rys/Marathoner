@@ -8,7 +8,7 @@ class Player(pygame.sprite.Sprite):
         self.run_index = 0
         self.jump_index = 0
         self.load()
-        
+
     def load(self):
         # RUNNING ANIMATION FRAMES
         player_run1 = pygame.image.load(resource_path('images/run1.png')).convert_alpha()
@@ -43,7 +43,7 @@ class Player(pygame.sprite.Sprite):
         # JUMP
         if keys[pygame.K_SPACE] and self.rect.bottom >= self.screen_size[1] - self.screen_size[1] // 3.5:
             # GRAVITY RELATIVE TO SCREEN SIZE
-            self.gravity = -0.01403 * self.screen_size[1] - 5.978 
+            self.gravity = -0.01403 * self.screen_size[1] - 5.978
             # PLAY JUMP SOUND
             channel.play(self.jump_sound)
 

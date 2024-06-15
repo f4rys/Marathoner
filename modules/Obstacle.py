@@ -1,13 +1,15 @@
-import pygame
 from random import randint
+
+import pygame
+
 from resource_path import resource_path
 
 class Obstacle(pygame.sprite.Sprite):
-    def __init__(self, type, screen_size):
+    def __init__(self, obstacle_type, screen_size):
         super().__init__()
 
         self.screen_size = screen_size
-        self.type = type
+        self.type = obstacle_type
         self.load()
 
     def load(self):
