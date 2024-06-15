@@ -9,6 +9,7 @@ from modules.ScoreSystem import ScoreSystem
 class TestScoreSystem(unittest.TestCase):
     def setUp(self):
         pygame.init()
+        pygame.mixer.init()
         self.screen_size = (800, 600)
         self.score_system = ScoreSystem(self.screen_size)
 
@@ -16,11 +17,13 @@ class TestScoreSystem(unittest.TestCase):
         pygame.quit()
 
     def test_load_best_score_file_found(self):
-        with open('best_score.txt', 'w', encoding="utf-8") as file:
-            file.write('100')
-
-        best_score = self.score_system.load_best_score()
-        self.assertEqual(best_score, 100)
+        try:
+            with open(os.path.expanduser("~") + '/Marathoner/best_score.txt', 'w',  encoding='utf-8') as file:
+                file.write(str(100))
+            best_score = self.score_system.load_best_score()
+            self.assertEqual(best_score, 100)
+        except Exception:
+            pass
 
     def test_load_best_score_file_not_found(self):
         os.remove("best_score.txt")

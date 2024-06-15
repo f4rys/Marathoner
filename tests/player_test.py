@@ -7,6 +7,7 @@ from modules.Player import Player
 class TestPlayer(unittest.TestCase):
     def setUp(self):
         pygame.init()
+        pygame.mixer.init()
         self.screen_size = (800, 600)
         self.screen = pygame.display.set_mode(self.screen_size, pygame.RESIZABLE)
         self.player = Player(self.screen_size)

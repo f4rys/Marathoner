@@ -7,6 +7,7 @@ from modules.Button import Button
 class TestButton(unittest.TestCase):
     def setUp(self):
         pygame.init()
+        pygame.mixer.init()
         self.screen = MagicMock()
         self.font = pygame.font.Font('font/pixeled.ttf', 40)
         self.on_click_function = MagicMock()

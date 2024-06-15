@@ -9,6 +9,7 @@ class TestGame(unittest.TestCase):
 
     def setUp(self):
         pygame.init()
+        pygame.mixer.init()
         self.game = Game()
 
     def tearDown(self):

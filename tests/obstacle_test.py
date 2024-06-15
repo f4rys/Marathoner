@@ -7,6 +7,7 @@ from modules.Obstacle import Obstacle
 class TestObstacle(unittest.TestCase):
     def setUp(self):
         pygame.init()
+        pygame.mixer.init()
         self.screen_size = (800, 600)
         self.screen = pygame.display.set_mode(self.screen_size, pygame.RESIZABLE)
 

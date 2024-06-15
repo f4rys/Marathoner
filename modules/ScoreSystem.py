@@ -11,6 +11,7 @@ class ScoreSystem():
     def load_best_score(self):
         try:
             with open(os.path.expanduser("~") + '/Marathoner/best_score.txt', 'r', encoding='utf-8') as file:
+                print(file.read())
                 best_score = int(file.read())
                 return best_score
         except FileNotFoundError:
