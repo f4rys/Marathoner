@@ -1,5 +1,7 @@
-import pygame
 import unittest
+
+import pygame
+
 from modules.Player import Player
 
 class TestPlayer(unittest.TestCase):

@@ -1,8 +1,10 @@
+import os
 import unittest
 from unittest.mock import patch
+
 import pygame
+
 from modules.ScoreSystem import ScoreSystem
-import os
 
 class TestScoreSystem(unittest.TestCase):
     def setUp(self):
@@ -14,19 +16,19 @@ class TestScoreSystem(unittest.TestCase):
         pygame.quit()
 
     def test_load_best_score_file_found(self):
-        with open('best_score.txt', 'w') as file:
+        with open('best_score.txt', 'w', encoding="utf-8") as file:
             file.write('100')
 
         best_score = self.score_system.load_best_score()
         self.assertEqual(best_score, 100)
 
     def test_load_best_score_file_not_found(self):
-        os.remove("best_score.txt") 
+        os.remove("best_score.txt")
         best_score = self.score_system.load_best_score()
         self.assertEqual(best_score, 0)
 
     def test_load_best_score_invalid_value(self):
-        with open('best_score.txt', 'w') as file:
+        with open('best_score.txt', 'w', encoding="utf-8") as file:
             file.write('invalid')
 
         best_score = self.score_system.load_best_score()

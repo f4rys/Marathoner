@@ -1,6 +1,7 @@
 import unittest
-import pygame
 from unittest.mock import MagicMock
+import pygame
+
 from modules.Button import Button
 
 class TestButton(unittest.TestCase):

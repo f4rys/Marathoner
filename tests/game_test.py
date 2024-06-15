@@ -1,6 +1,8 @@
 import unittest
-import pygame
 from unittest.mock import MagicMock
+
+import pygame
+
 from modules.Game import Game
 
 class TestGame(unittest.TestCase):
