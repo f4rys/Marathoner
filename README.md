@@ -2,7 +2,7 @@
 
 <div align="center">
   <p>
-    <img src="https://imgur.com/H6A3Ywh.png" width="290" height="35"/>
+    <img src="logo.png" width="290" height="35"/>
   </p>
 <br/>
 
@@ -14,15 +14,13 @@
 
 # 
 
-<div>Simple 2D game built with Pygame. Character runs throught the world and has to avoid obstacles by jumping over them.</div>
+<div>This Pygame project is a simple 2D infinite runner game. The player controls a character who automatically runs through a side-scrolling world. The goal is to avoid obstacles by timing jumps accurately. In the game menu, you can see your best score and adjust settings.
 
 <br/>
 
-<div align="center">
-  <p>
-    <img src="https://imgur.com/EkFUscL.gif"/>
-  </p>
-</div>
+<p align="center">
+  <img src="preview.gif">
+</p>
 
 ## Controls
 <div>Space for jumping and starting new game. Escape or [ESC] button to toggle pause menu. Drag the corners or sides of window to resize. Quit the game by clicking [X] button.</div>
