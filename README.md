@@ -27,7 +27,7 @@
 ## Controls
 <div>Space for jumping and starting new game. Escape or [ESC] button to toggle pause menu. Drag the corners or sides of window to resize. Quit the game by clicking [X] button.</div>
 
-## Menu option
+## Menu settings
 <div>• Toggle fullscreen</div>
 <div>• Toggle music</div>
 <div>• Toggle sounds</div>
