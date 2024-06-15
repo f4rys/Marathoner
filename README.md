@@ -17,10 +17,11 @@
 <div>This Pygame project is a simple 2D infinite runner game. The player controls a character who automatically runs through a side-scrolling world. The goal is to avoid obstacles by timing jumps accurately. In the game menu, you can see your best score and adjust settings.
 
 <br/>
+<br/>
 
-<p align="center">
+<div align="center">
   <img src="preview.gif">
-</p>
+</div>
 
 ## Controls
 <div>Space for jumping and starting new game. Escape or [ESC] button to toggle pause menu. Drag the corners or sides of window to resize. Quit the game by clicking [X] button.</div>
