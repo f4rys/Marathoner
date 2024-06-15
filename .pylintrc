@@ -8,3 +8,11 @@ disable=
     broad-exception-caught,
     attribute-defined-outside-init,
     no-member,
+    too-many-instance-attributes,
+    too-few-public-methods,
+    too-many-arguments,
+    no-else-return,
+    too-many-locals,
+    too-many-branches,
+    too-many-statements,
+    consider-using-min-builtin
