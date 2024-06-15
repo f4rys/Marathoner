@@ -4,9 +4,13 @@
   <p>
     <img src="https://imgur.com/H6A3Ywh.png" width="290" height="35"/>
   </p>
-</div>
-
 <br/>
+
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+
+[![Pylint](https://github.com/f4rys/Marathoner/actions/workflows/pylint.yml/badge.svg)](https://github.com/f4rys/Marathoner/actions/workflows/pylint.yml) [![Python application](https://github.com/f4rys/Marathoner/actions/workflows/python-app.yml/badge.svg)](https://github.com/f4rys/Marathoner/actions/workflows/python-app.yml) ![GitHub Release](https://img.shields.io/github/v/release/f4rys/marathoner)
+
+</div>
 
 # 
 
