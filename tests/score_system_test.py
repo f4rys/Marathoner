@@ -27,14 +27,14 @@ class TestScoreSystem(unittest.TestCase):
 
     def test_load_best_score_file_not_found(self):
         if not os.path.exists("best_score.txt"):
-            with open("best_score.txt", "w", encoding="utf-8") as file:
+            with open(os.path.expanduser("~") + '/Marathoner/best_score.txt', 'w',  encoding='utf-8') as file:
                 file.write("0")
-        os.remove("best_score.txt")
+        os.remove(os.path.expanduser("~") + '/Marathoner/best_score.txt')
         best_score = self.score_system.load_best_score()
         self.assertEqual(best_score, 0)
 
     def test_load_best_score_invalid_value(self):
-        with open('best_score.txt', 'w', encoding="utf-8") as file:
+        with open(os.path.expanduser("~") + '/Marathoner/best_score.txt', 'w',  encoding='utf-8') as file:
             file.write('invalid')
 
         best_score = self.score_system.load_best_score()
