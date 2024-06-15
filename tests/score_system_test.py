@@ -26,6 +26,9 @@ class TestScoreSystem(unittest.TestCase):
             pass
 
     def test_load_best_score_file_not_found(self):
+        if not os.path.exists("best_score.txt"):
+            with open("best_score.txt", "w", encoding="utf-8") as file:
+                file.write("0")
         os.remove("best_score.txt")
         best_score = self.score_system.load_best_score()
         self.assertEqual(best_score, 0)
