@@ -24,7 +24,7 @@
 </div>
 
 ## Controls
-<div>Space for jumping and starting new game. Escape or [ESC] button to toggle pause menu. Drag the corners or sides of window to resize. Quit the game by clicking [X] button.</div>
+<div>Space for jumping and starting a new game. Escape or [ESC] button to toggle the pause menu. Drag the corners or sides of the window to resize. Quit the game by clicking the [X] button.</div>
 
 ## Menu settings
 <div>• Toggle fullscreen</div>
@@ -39,4 +39,4 @@
 <div>• Player and stones graphics were created via <a href="https://www.bing.com/create">Bing Image Creator</a></div>
 <div>• Jump sound effect taken from <a href="https://www.youtube.com/watch?v=QmCfnTtM7vU">here</a></div>
 <div>• Game over sound effect taken from <a href="https://www.youtube.com/watch?v=bug1b0fQS8Y">here</a></div>
-<div>• I am the author of theme song. Its full version is available <a href="https://on.soundcloud.com/C6pCU">here</a></div>
+<div>• I am the author of the theme song. Its full version is available <a href="https://on.soundcloud.com/C6pCU">here</a></div>
