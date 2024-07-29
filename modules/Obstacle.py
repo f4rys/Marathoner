@@ -12,7 +12,7 @@ class Obstacle(pygame.sprite.Sprite):
         self.type = obstacle_type
         self.load()
 
-    def load(self):
+    def load(self, initial=True):
         if self.type == 'stone1':
             image = pygame.image.load(resource_path('images/stone1.png')).convert_alpha()
             y_pos = self.screen_size[1] * 0.74
@@ -24,8 +24,11 @@ class Obstacle(pygame.sprite.Sprite):
 
         self.image = pygame.transform.scale(image, (image.get_width() * multiplier, image.get_height() * multiplier))
         self.mask = pygame.mask.from_surface(self.image)
-        self.rect = self.image.get_rect(midbottom=(randint(self.screen_size[0], self.screen_size[0] + self.screen_size[0] // 4), y_pos))
 
+        if initial:
+            self.rect = self.image.get_rect(midbottom=(randint(self.screen_size[0], self.screen_size[0] + self.screen_size[0] // 4), y_pos))
+        else:
+            self.rect = self.image.get_rect(midbottom=(self.rect.x, y_pos))
     def update(self):
         self.rect.x -= 10
         self.destroy()
@@ -36,4 +39,4 @@ class Obstacle(pygame.sprite.Sprite):
 
     def update_screen_size(self, screen_size):
         self.screen_size = screen_size
-        self.load()
+        self.load(False)
