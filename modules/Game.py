@@ -206,6 +206,9 @@ class Game():
                     # RETURN FROM PAUSE MENU THROUGH ESC
                     elif event.key == pygame.K_ESCAPE and self.current_screen == 2:
                         self.resume_game()
+                    # FULLSCREEN TOGGLE WITH F11
+                    if event.key == pygame.K_F11:
+                        self.toggle_fullscreen()
 
                 # ADD NEW OBSTACLE
                 if event.type == self.obstacle_timer and self.current_screen == 1 and pygame.time.get_ticks() - self.resize_time > 1000:
@@ -292,7 +295,7 @@ class Game():
 
                 Button(self.screen_size[0] - self.screen_size[0] // 6, self.screen_size[1] // 14, self.game_font, "[ESC]", self.screen, self.resume_game, events).process()
                 Button(self.screen_size[0] - self.screen_size[0] // 14, self.screen_size[1] // 14, self.game_font, "[X]", self.screen, self.quit_game, events, "Red").process()
-                Button(self.screen_size[0] // 2, self.screen_size[1] // 2, self.game_font, "[FULLSCREEN]", self.screen, self.toggle_fullscreen, events).process()
+                Button(self.screen_size[0] // 2, self.screen_size[1] // 2, self.game_font, "[FULLSCREEN F11]", self.screen, self.toggle_fullscreen, events).process()
                 Button(self.screen_size[0] // 2, self.screen_size[1] // 2 + (self.screen_size[1] // 10) * 1, self.game_font, "[RESET BEST SCORE]", self.screen, self.score_system.reset_best_score, events).process()
                 Button(self.screen_size[0] // 2, self.screen_size[1] // 2 + (self.screen_size[1] // 10) * 2, self.game_font, music_message, self.screen, self.toggle_music, events).process()
                 Button(self.screen_size[0] // 2, self.screen_size[1] // 2 + (self.screen_size[1] // 10) * 3, self.game_font, sounds_message, self.screen, self.toggle_sounds, events).process()
