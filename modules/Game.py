@@ -131,6 +131,11 @@ class Game():
         self.start_time += int(self.pause_time / 1000)
         self.pause_time = 0
 
+    def abort_game(self):
+        self.current_screen = 0
+        self.score = 0
+        self.obstacle_group.empty()
+
     def quit_game(self):
         pygame.quit()
         sys.exit()
@@ -287,19 +292,25 @@ class Game():
 
                 # RECTANGLES
                 pause_text_rect = pause_text.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 4))
-                best_score_text_rect = best_score_text.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 4 + (self.screen_size[1] // 10) * 1))
+                best_score_text_rect = best_score_text.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 3))
 
                 # DRAW ELEMENTS
-                #self.screen.blit(pygame.transform.scale(self.pause_surface, self.screen_size), (0, 0))
                 self.screen.blit(pause_text, pause_text_rect)
                 self.screen.blit(best_score_text, best_score_text_rect)
 
+                # BUTTONS LIST
+                button_y = self.screen_size[1] // 2
+                button_spacing = self.screen_size[1] // 12
+
+                Button(self.screen_size[0] // 2, button_y, self.game_font, "[ABORT GAME]", self.screen, self.abort_game, events).process()
+                Button(self.screen_size[0] // 2, button_y + button_spacing, self.game_font, "[FULLSCREEN F11]", self.screen, self.toggle_fullscreen, events).process()
+                Button(self.screen_size[0] // 2, button_y + button_spacing * 2, self.game_font, "[RESET BEST SCORE]", self.screen, self.score_system.reset_best_score, events).process()
+                Button(self.screen_size[0] // 2, button_y + button_spacing * 3, self.game_font, music_message, self.screen, self.toggle_music, events).process()
+                Button(self.screen_size[0] // 2, button_y + button_spacing * 4, self.game_font, sounds_message, self.screen, self.toggle_sounds, events).process()
+
+                # DRAW [ESC] and [X] BUTTONS
                 Button(self.screen_size[0] - self.screen_size[0] // 6, self.screen_size[1] // 14, self.game_font, "[ESC]", self.screen, self.resume_game, events).process()
                 Button(self.screen_size[0] - self.screen_size[0] // 14, self.screen_size[1] // 14, self.game_font, "[X]", self.screen, self.quit_game, events, "Red").process()
-                Button(self.screen_size[0] // 2, self.screen_size[1] // 2, self.game_font, "[FULLSCREEN F11]", self.screen, self.toggle_fullscreen, events).process()
-                Button(self.screen_size[0] // 2, self.screen_size[1] // 2 + (self.screen_size[1] // 10) * 1, self.game_font, "[RESET BEST SCORE]", self.screen, self.score_system.reset_best_score, events).process()
-                Button(self.screen_size[0] // 2, self.screen_size[1] // 2 + (self.screen_size[1] // 10) * 2, self.game_font, music_message, self.screen, self.toggle_music, events).process()
-                Button(self.screen_size[0] // 2, self.screen_size[1] // 2 + (self.screen_size[1] // 10) * 3, self.game_font, sounds_message, self.screen, self.toggle_sounds, events).process()
 
             pygame.display.update()
             self.clock.tick(60)
