@@ -52,7 +52,7 @@ class Game():
         self.sky_surface = pygame.image.load(resource_path('images/sky.jpg')).convert()
         self.ground_surface = pygame.image.load(resource_path('images/ground.png')).convert_alpha()
         self.vignette_surface = pygame.image.load(resource_path('images/vignette.png')).convert_alpha()
-        self.pause_surface = pygame.image.load(resource_path('images/pause.png')).convert_alpha()
+        self.blur_surface = pygame.image.load(resource_path('images/blur.jpg')).convert_alpha()
 
         # MUSIC & SOUNDS
         self.game_over_sound = pygame.mixer.Sound(resource_path('audio/game_over.ogg'))
@@ -221,20 +221,8 @@ class Game():
 
             # START / GAME OVER MENU
             if self.current_screen == 0:
-
-                # RENDERS AND RECTANGLES
-                best_score_message = self.game_font.render(f"BEST SCORE: {best_score}", False, "White")
-                best_score_message_rect = best_score_message.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 1.1))
-
-                # DRAW ELEMENTS
-                self.screen.blit(pygame.transform.scale(self.sky_surface, self.screen_size), (0, 0))
-                self.screen.blit(pygame.transform.scale(self.vignette_surface, self.screen_size), (0, 0))
-                self.screen.blit(best_score_message, best_score_message_rect)
-                Button(self.screen_size[0] // 2, self.screen_size[1] // 1.25, self.game_font, "CLICK OR PRESS 'SPACE' TO START", self.screen, self.start_game, events).process()
-                Button(self.screen_size[0] // 2, self.screen_size[1] // 12, self.game_font, "[VISIT MY GITHUB]", self.screen, self.open_github, events).process()
-                Button(self.screen_size[0] - self.screen_size[0] // 14, self.screen_size[1] // 14, self.game_font, "[X]", self.screen, self.quit_game, events, "Red").process()
-
                 if self.score != 0:
+                    self.screen.blit(pygame.transform.scale(self.blur_surface, self.screen_size), (0, 0))
                     game_over_message = self.game_font.render("GAME OVER", False, "White")
                     game_over_message_rect = game_over_message.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 2.1))
 
@@ -243,6 +231,19 @@ class Game():
 
                     self.screen.blit(game_over_message,  game_over_message_rect)
                     self.screen.blit(score_message, score_message_rect)
+                else:
+                    self.screen.blit(pygame.transform.scale(self.sky_surface, self.screen_size), (0, 0))
+                    self.screen.blit(pygame.transform.scale(self.vignette_surface, self.screen_size), (0, 0))
+
+                # RENDERS AND RECTANGLES
+                best_score_message = self.game_font.render(f"BEST SCORE: {best_score}", False, "White")
+                best_score_message_rect = best_score_message.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 1.1))
+
+                # DRAW ELEMENTS
+                self.screen.blit(best_score_message, best_score_message_rect)
+                Button(self.screen_size[0] // 2, self.screen_size[1] // 1.25, self.game_font, "CLICK OR PRESS 'SPACE' TO START", self.screen, self.start_game, events).process()
+                Button(self.screen_size[0] // 2, self.screen_size[1] // 12, self.game_font, "[VISIT MY GITHUB]", self.screen, self.open_github, events).process()
+                Button(self.screen_size[0] - self.screen_size[0] // 14, self.screen_size[1] // 14, self.game_font, "[X]", self.screen, self.quit_game, events, "Red").process()
 
             # GAME
             elif self.current_screen == 1:
@@ -275,7 +276,7 @@ class Game():
             elif self.current_screen == 2:
 
                 # DRAW BACKGROUND
-                self.screen.blit(pygame.transform.scale(self.sky_surface, self.screen_size), (0, 0))
+                self.screen.blit(pygame.transform.scale(self.blur_surface, self.screen_size), (0, 0))
 
                 # RENDERS
                 music_message = "[UNMUTE MUSIC]" if not self.settings.music else "[MUTE MUSIC]"
@@ -289,7 +290,7 @@ class Game():
                 best_score_text_rect = best_score_text.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 4 + (self.screen_size[1] // 10) * 1))
 
                 # DRAW ELEMENTS
-                self.screen.blit(pygame.transform.scale(self.pause_surface, self.screen_size), (0, 0))
+                #self.screen.blit(pygame.transform.scale(self.pause_surface, self.screen_size), (0, 0))
                 self.screen.blit(pause_text, pause_text_rect)
                 self.screen.blit(best_score_text, best_score_text_rect)
 
