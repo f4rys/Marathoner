@@ -9,6 +9,7 @@ from modules.Obstacle import Obstacle
 from modules.Player import Player
 from modules.ScoreSystem import ScoreSystem
 from modules.Button import Button
+from modules.Settings import Settings
 from resource_path import resource_path
 
 class Game():
@@ -20,6 +21,9 @@ class Game():
             os.mkdir(os.path.expanduser("~") + '/Marathoner')
         except FileExistsError:
             pass
+
+        # SETTINGS
+        self.settings = Settings()
 
         # CURRENT MONITOR
         os.environ['SDL_VIDEO_CENTERED'] = '1'
@@ -52,15 +56,18 @@ class Game():
 
         # MUSIC & SOUNDS
         self.game_over_sound = pygame.mixer.Sound(resource_path('audio/game_over.ogg'))
-        theme_sound = pygame.mixer.Sound(resource_path('audio/theme.ogg'))
-
-        self.game_over_sound.set_volume(0.5)
-        theme_sound.set_volume(0.5)
+        self.theme_sound = pygame.mixer.Sound(resource_path('audio/theme.ogg'))
 
         self.channel1 = pygame.mixer.Channel(0)
         self.channel2 = pygame.mixer.Channel(1)
 
-        self.channel1.play(theme_sound, loops = -1)
+        self.game_over_sound.set_volume(1)
+        self.theme_sound.set_volume(1)
+
+        self.channel2.set_volume(1 if self.settings.sounds else 0)
+        self.channel1.set_volume(0.5 if self.settings.music else 0)
+
+        self.channel1.play(self.theme_sound, loops = -1)
 
         # CLOCK
         self.clock = pygame.time.Clock()
@@ -81,8 +88,6 @@ class Game():
         # FLAGS
         self.game_active = False
         self.fullscreen = False
-        self.music_muted = False
-        self.sounds_muted = False
 
     def toggle_fullscreen(self):
         # ENTER FULLSCREEN MODE
@@ -97,24 +102,20 @@ class Game():
             self.fullscreen = False
 
     def toggle_music(self):
-        # MUTE MUSIC
-        if not self.music_muted:
-            self.channel1.pause()
-            self.music_muted = True
-        # UNMUTE MUSIC
-        elif self.music_muted:
-            self.channel1.unpause()
-            self.music_muted = False
+        self.settings.update_settings(not self.settings.music, "Music")
+
+        if self.settings.music:
+            self.channel1.set_volume(0.5)
+        else:
+            self.channel1.set_volume(0)
 
     def toggle_sounds(self):
-        # MUTE SOUNDS
-        if not self.sounds_muted:
-            self.channel2.set_volume(0)
-            self.sounds_muted = True
-        # UNMUTE SOUNDS
-        elif self.sounds_muted:
+        self.settings.update_settings(not self.settings.sounds, "Sounds")
+
+        if self.settings.sounds:
             self.channel2.set_volume(1)
-            self.sounds_muted = False
+        else:
+            self.channel2.set_volume(0)
 
     def start_game(self):
         self.current_screen = 1
@@ -174,7 +175,7 @@ class Game():
         # RESIZE PLAYER
         self.player.sprite.update_screen_size(self.screen_size)
 
-        # RESIZE SCORE rectS
+        # RESIZE SCORE RECTS
         self.score_system.update_screen_size(self.screen_size)
 
         # RESIZE OBSTACLES
@@ -184,10 +185,6 @@ class Game():
     def run(self):
         # GAME LOOP
         while True:
-
-            # GET MOUSE POSITION
-            #mouse = pygame.mouse.get_pos()
-
             # LOAD BEST SCORE
             best_score = self.score_system.load_best_score()
 
@@ -278,15 +275,8 @@ class Game():
                 self.screen.blit(pygame.transform.scale(self.sky_surface, self.screen_size), (0, 0))
 
                 # RENDERS
-                if self.music_muted:
-                    music_message = "[UNMUTE MUSIC]"
-                else:
-                    music_message = "[MUTE MUSIC]"
-
-                if self.sounds_muted:
-                    sounds_message = "[UNMUTE SOUND]"
-                else:
-                    sounds_message = "[MUTE SOUND]"
+                music_message = "[UNMUTE MUSIC]" if not self.settings.music else "[MUTE MUSIC]"
+                sounds_message = "[UNMUTE SOUND]" if not self.settings.sounds else "[MUTE SOUND]"
 
                 pause_text = self.game_font.render("GAME PAUSED", False, "White")
                 best_score_text = self.game_font.render(f"BEST SCORE: {best_score}", False, "White")
