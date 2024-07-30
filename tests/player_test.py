@@ -1,5 +1,4 @@
 import unittest
-
 import pygame
 
 from modules.Player import Player

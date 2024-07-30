@@ -1,6 +1,4 @@
 import unittest
-from unittest.mock import MagicMock
-
 import pygame
 
 from modules.Game import Game
@@ -27,24 +25,24 @@ class TestGame(unittest.TestCase):
         self.assertEqual(self.game.screen_size, original_screen_size)
 
     def test_toggle_music(self):
-        self.game.channel1 = MagicMock()
+        self.game.settings.update_settings(True, "Music")
+        self.assertEqual(self.game.settings.music, 1)
 
         self.game.toggle_music()
-        self.game.channel1.pause.assert_called_once()
-        self.assertTrue(self.game.music_muted)
+        self.assertEqual(self.game.settings.music, 0)
 
         self.game.toggle_music()
-        self.game.channel1.unpause.assert_called_once()
-        self.assertFalse(self.game.music_muted)
+        self.assertEqual(self.game.settings.music, 1)
 
     def test_toggle_sounds(self):
-        self.game.channel2 = MagicMock()
+        self.game.settings.update_settings(True, "Sounds")
+        self.assertEqual(self.game.settings.sounds, 1)
 
         self.game.toggle_sounds()
-        self.assertTrue(self.game.sounds_muted)
+        self.assertEqual(self.game.settings.sounds, 0)
 
         self.game.toggle_sounds()
-        self.assertFalse(self.game.sounds_muted)
+        self.assertEqual(self.game.settings.sounds, 1)
 
     def test_start_game(self):
         self.game.start_game()
