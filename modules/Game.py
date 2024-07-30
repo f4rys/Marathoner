@@ -84,6 +84,7 @@ class Game():
         self.current_screen = 0
         self.pause_time = 0
         self.resize_time = 0
+        self.last_game_over_time = 0
 
         # FLAGS
         self.game_active = False
@@ -146,6 +147,7 @@ class Game():
             self.obstacle_group.empty()
             self.channel2.play(self.game_over_sound)
             self.score_system.save_best_score(self.score)
+            self.last_game_over_time = pygame.time.get_ticks()
             return 0
         else:
             return 1
@@ -204,7 +206,9 @@ class Game():
                 if event.type == pygame.KEYDOWN:
                     # START GAME
                     if event.key == pygame.K_SPACE and self.current_screen == 0:
-                        self.start_game()
+                        current_time = pygame.time.get_ticks()
+                        if current_time - self.last_game_over_time > 500:
+                            self.start_game()
                     # OPEN PAUSE MENU THROUGH ESC
                     if event.key == pygame.K_ESCAPE and self.current_screen == 1:
                         self.pause_game()
@@ -252,7 +256,6 @@ class Game():
 
             # GAME
             elif self.current_screen == 1:
-
                 # DRAW BACKGROUND
                 self.screen.blit(pygame.transform.scale(self.sky_surface, self.screen_size), (0, 0))
                 self.screen.blit(pygame.transform.scale(self.ground_surface, self.screen_size), (0, self.screen_size[1] * 0.6))
@@ -279,7 +282,6 @@ class Game():
 
             # PAUSE MENU
             elif self.current_screen == 2:
-
                 # DRAW BACKGROUND
                 self.screen.blit(pygame.transform.scale(self.blur_surface, self.screen_size), (0, 0))
 
