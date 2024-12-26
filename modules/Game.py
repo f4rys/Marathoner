@@ -10,6 +10,11 @@ from modules.Player import Player
 from modules.ScoreSystem import ScoreSystem
 from modules.Button import Button
 from modules.Settings import Settings
+
+from modules.screens.StartGameScreen import StartGameScreen
+from modules.screens.GameOverScreen import GameOverScreen
+from modules.screens.PauseGameScreen import PauseGameScreen
+
 from resource_path import resource_path
 
 class Game():
@@ -89,6 +94,11 @@ class Game():
         # FLAGS
         self.game_active = False
         self.fullscreen = False
+
+        # SCREENS
+        self.start_game_screen = StartGameScreen(self.screen, self.game_font, self)
+        self.game_over_screen = GameOverScreen(self.screen, self.game_font, self)
+        self.pause_game_screen = PauseGameScreen(self.screen, self.game_font, self)
 
     def toggle_fullscreen(self):
         # ENTER FULLSCREEN MODE
@@ -231,28 +241,9 @@ class Game():
             # START / GAME OVER MENU
             if self.current_screen == 0:
                 if self.score != 0:
-                    self.screen.blit(pygame.transform.scale(self.blur_surface, self.screen_size), (0, 0))
-                    game_over_message = self.game_font.render("GAME OVER", False, "White")
-                    game_over_message_rect = game_over_message.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 2.1))
-
-                    score_message = self.game_font.render(f"YOUR SCORE: {self.score}", False, "White")
-                    score_message_rect = score_message.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 1.7))
-
-                    self.screen.blit(game_over_message,  game_over_message_rect)
-                    self.screen.blit(score_message, score_message_rect)
+                    self.game_over_screen.frame(self.screen_size, events, self.score, best_score)
                 else:
-                    self.screen.blit(pygame.transform.scale(self.sky_surface, self.screen_size), (0, 0))
-                    self.screen.blit(pygame.transform.scale(self.vignette_surface, self.screen_size), (0, 0))
-
-                # RENDERS AND RECTANGLES
-                best_score_message = self.game_font.render(f"BEST SCORE: {best_score}", False, "White")
-                best_score_message_rect = best_score_message.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 1.1))
-
-                # DRAW ELEMENTS
-                self.screen.blit(best_score_message, best_score_message_rect)
-                Button(self.screen_size[0] // 2, self.screen_size[1] // 1.25, self.game_font, "CLICK OR PRESS 'SPACE' TO START", self.screen, self.start_game, events).process()
-                Button(self.screen_size[0] // 2, self.screen_size[1] // 12, self.game_font, "[VISIT MY GITHUB]", self.screen, self.open_github, events).process()
-                Button(self.screen_size[0] - self.screen_size[0] // 14, self.screen_size[1] // 14, self.game_font, "[X]", self.screen, self.quit_game, events, "Red").process()
+                    self.start_game_screen.frame(self.screen_size, events, best_score)
 
             # GAME
             elif self.current_screen == 1:
@@ -282,37 +273,7 @@ class Game():
 
             # PAUSE MENU
             elif self.current_screen == 2:
-                # DRAW BACKGROUND
-                self.screen.blit(pygame.transform.scale(self.blur_surface, self.screen_size), (0, 0))
-
-                # RENDERS
-                music_message = "[UNMUTE MUSIC]" if not self.settings.music else "[MUTE MUSIC]"
-                sounds_message = "[UNMUTE SOUND]" if not self.settings.sounds else "[MUTE SOUND]"
-
-                pause_text = self.game_font.render("GAME PAUSED", False, "White")
-                best_score_text = self.game_font.render(f"BEST SCORE: {best_score}", False, "White")
-
-                # RECTANGLES
-                pause_text_rect = pause_text.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 4))
-                best_score_text_rect = best_score_text.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 3))
-
-                # DRAW ELEMENTS
-                self.screen.blit(pause_text, pause_text_rect)
-                self.screen.blit(best_score_text, best_score_text_rect)
-
-                # BUTTONS LIST
-                button_y = self.screen_size[1] // 2
-                button_spacing = self.screen_size[1] // 12
-
-                Button(self.screen_size[0] // 2, button_y, self.game_font, "[ABORT GAME]", self.screen, self.abort_game, events).process()
-                Button(self.screen_size[0] // 2, button_y + button_spacing, self.game_font, "[FULLSCREEN F11]", self.screen, self.toggle_fullscreen, events).process()
-                Button(self.screen_size[0] // 2, button_y + button_spacing * 2, self.game_font, "[RESET BEST SCORE]", self.screen, self.score_system.reset_best_score, events).process()
-                Button(self.screen_size[0] // 2, button_y + button_spacing * 3, self.game_font, music_message, self.screen, self.toggle_music, events).process()
-                Button(self.screen_size[0] // 2, button_y + button_spacing * 4, self.game_font, sounds_message, self.screen, self.toggle_sounds, events).process()
-
-                # DRAW [ESC] and [X] BUTTONS
-                Button(self.screen_size[0] - self.screen_size[0] // 6, self.screen_size[1] // 14, self.game_font, "[ESC]", self.screen, self.resume_game, events).process()
-                Button(self.screen_size[0] - self.screen_size[0] // 14, self.screen_size[1] // 14, self.game_font, "[X]", self.screen, self.quit_game, events, "Red").process()
+                self.pause_game_screen.frame(self.screen_size, events, best_score, self.settings)
 
             pygame.display.update()
             self.clock.tick(60)
